@@ -148,19 +148,25 @@ class MainWindow(QMainWindow):
         """
 
         repFrame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+        appGridLayout = QGridLayout()
+        appGridLayout.setSpacing(0)
 
-        appGrid = QGridLayout()
-        appList = [("App1", "0"), ("App2", "1"), ("App3", "1"), ("App4", "1"),
-                   ("App5", "1"), ("App6", "0"), ("App7", "1"), ("App8", "0")]
+        appList = [("bus", "0"), ("lightning", "1"), ("cams", "1"), ("factory", "1"),
+                   ("health", "1"), ("roll", "0"), ("store", "1"), ("test", "0")]
 
         numApp = len(appList)
         cols = 4
         rows = numApp / 4
         for row in range(rows):
             for col in range(cols):
-                appGrid.addWidget(QPushButton(appList.pop(0)[0]), row, col)
+                app = appList.pop(0)
+                but = QPushButton(app[0])
+                but.setIcon(QIcon('../Resources/Icons/AppPoC/'+ app[0] + '.png'))
+                but.setIconSize(QSize(60, 60))
+                #but.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+                appGridLayout.addWidget(but, row, col)
 
-        repFrame.setLayout(appGrid)
+        repFrame.setLayout(appGridLayout)
 
 
 if __name__ == '__main__':

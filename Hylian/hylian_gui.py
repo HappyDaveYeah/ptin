@@ -41,96 +41,31 @@ class MainWindow(QMainWindow):
         # Actions
         self.createActions()
 
-        # Top QFrame
-        topFrame = QFrame()
-        #topFrame.setFrameShape(QFrame.Box)
-        topFrame.setStyleSheet("QFrame { background-color:qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(250, 250, 250, 90), stop:0.9 rgba(255, 255, 255, 255)) }")
+        # Top Menu QFrame
+        topMenuFrame = QFrame()
+        self.createTopMenu(topMenuFrame)
 
-        # Layouts
-        menuLayout = QHBoxLayout()
-        menuLayout.setContentsMargins(QMargins(10, 0, 10, 0))
-        centerLayout = QStackedLayout()
-        mainLayout = QVBoxLayout()
-        mainLayout.setContentsMargins(QMargins(0, 0, 0, 0))
+        # Repository
+        repFrame = QFrame()
+        self.createRepository(repFrame)
 
-        # Top move buttons
-        self.backBut = QToolButton()
-        self.backBut.setIcon(QIcon('../Resources/Icons/back.png'))
-        self.forwardBut = QToolButton()
-        self.forwardBut.setIcon(QIcon('../Resources/Icons/forward.png'))
-        moveLayout = QHBoxLayout()
-        moveLayout.addWidget(self.backBut)
-        moveLayout.addWidget(self.forwardBut)
-        moveLayout.setSpacing(0)
-
-        # Top menu buttons
-        self.repBut = QToolButton()
-        #self.repBut.setStyleSheet("background-color:transparent; border:none")
-        self.repBut.setText("Repository")
-        self.repBut.setIcon(QIcon('../Resources/Icons/rep.png'))
-        self.repBut.setIconSize(QSize(20, 20))
-        self.repBut.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        self.repBut.setCheckable(True)
-        self.repBut.setAutoExclusive(True)
-        self.repBut.clicked.connect(lambda: centerLayout.setCurrentIndex(0))
-        self.configBut = QToolButton()
-        #self.configBut.setStyleSheet("background-color:transparent; border:none")
-        self.configBut.setText("System")
-        self.configBut.setIcon(QIcon('../Resources/Icons/sys.png'))
-        self.configBut.setIconSize(QSize(20, 20))
-        self.configBut.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        self.configBut.setCheckable(True)
-        self.configBut.setAutoExclusive(True)
-        self.configBut.clicked.connect(lambda: centerLayout.setCurrentIndex(1))
-        self.logBut = QToolButton()
-        #self.logBut.setStyleSheet("background-color:transparent; border:none")
-        self.logBut.setText("Logging")
-        self.logBut.setIcon(QIcon('../Resources/Icons/log.png'))
-        self.logBut.setIconSize(QSize(20, 20))
-        self.logBut.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        self.logBut.setCheckable(True)
-        self.logBut.setAutoExclusive(True)
-        self.logBut.clicked.connect(lambda: centerLayout.setCurrentIndex(2))
-        menuButLayout = QHBoxLayout()
-        menuButLayout.addWidget(self.repBut)
-        menuButLayout.addWidget(self.configBut)
-        menuButLayout.addWidget(self.logBut)
-        menuButLayout.setSpacing(0)
-
-
-        # Top search button
-        self.search = QLineEdit()
-        self.search.setPlaceholderText("search")
-
-
-        menuLayout.addLayout(moveLayout)
-        menuLayout.addStretch(2.5)
-        menuLayout.addLayout(menuButLayout)
-        menuLayout.addStretch(2)
-        menuLayout.addWidget(self.search)
-
-
-
-        self.repLabel = QLabel()
-        #self.repLabel.setFrameShape(QFrame.Box)
-        self.repLabel.setText("Rep")
-
+        # StackedLayout
+        self.centerStackedL = QStackedLayout()
+        self.centerStackedL.insertWidget(0, repFrame)
         self.sysLabel = QLabel()
         #self.sysLabel.setFrameShape(QFrame.Box)
         self.sysLabel.setText("Sys")
+        self.centerStackedL.insertWidget(1, self.sysLabel)
 
 
-        centerLayout.insertWidget(0, self.repLabel)
-        centerLayout.insertWidget(1, self.sysLabel)
+        # Main Layout
+        mainLayout = QVBoxLayout()
+        mainLayout.setContentsMargins(QMargins(0, 0, 0, 0))
 
-
-        topFrame.setLayout(menuLayout)
-        mainLayout.addWidget(topFrame)
-        mainLayout.addLayout(centerLayout)
-
+        mainLayout.addWidget(topMenuFrame)
+        mainLayout.addLayout(self.centerStackedL)
 
         centralWidget.setLayout(mainLayout)
-
 
 
 
@@ -138,7 +73,94 @@ class MainWindow(QMainWindow):
         """ Function to create actions for menus
         """
 
+    def createTopMenu(self, topMenuFrame):
+        """ Function to create top menu frame
+        """
 
+        topMenuFrame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+        topMenuFrame.setStyleSheet("QFrame { background-color:qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(250, 250, 250, 90), stop:0.9 rgba(255, 255, 255, 255)) }")
+
+
+        # Navigation buttons
+        backBut = QToolButton()
+        backBut.setIcon(QIcon('../Resources/Icons/back.png'))
+        forwardBut = QToolButton()
+        forwardBut.setIcon(QIcon('../Resources/Icons/forward.png'))
+        # Navigation layout
+        navigationL = QHBoxLayout()
+        navigationL.addWidget(backBut)
+        navigationL.addWidget(forwardBut)
+        navigationL.setSpacing(0)
+
+        # Button menu
+        repBut = QToolButton()
+        #repBut.setStyleSheet("background-color:transparent; border:none")
+        repBut.setText("Repository")
+        repBut.setIcon(QIcon('../Resources/Icons/rep.png'))
+        repBut.setIconSize(QSize(20, 20))
+        repBut.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        repBut.setCheckable(True)
+        repBut.setAutoExclusive(True)
+        repBut.clicked.connect(lambda: self.centerStackedL.setCurrentIndex(0))
+        configBut = QToolButton()
+        #configBut.setStyleSheet("background-color:transparent; border:none")
+        configBut.setText("System")
+        configBut.setIcon(QIcon('../Resources/Icons/sys.png'))
+        configBut.setIconSize(QSize(20, 20))
+        configBut.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        configBut.setCheckable(True)
+        configBut.setAutoExclusive(True)
+        configBut.clicked.connect(lambda: self.centerStackedL.setCurrentIndex(1))
+        logBut = QToolButton()
+        #logBut.setStyleSheet("background-color:transparent; border:none")
+        logBut.setText("Logging")
+        logBut.setIcon(QIcon('../Resources/Icons/log.png'))
+        logBut.setIconSize(QSize(20, 20))
+        logBut.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        logBut.setCheckable(True)
+        logBut.setAutoExclusive(True)
+        logBut.clicked.connect(lambda: self.centerStackedL.setCurrentIndex(2))
+        # Button menu layout
+        buttonMenuL = QHBoxLayout()
+        buttonMenuL.addWidget(repBut)
+        buttonMenuL.addWidget(configBut)
+        buttonMenuL.addWidget(logBut)
+        buttonMenuL.setSpacing(0)
+
+        # Search button
+        search = QLineEdit()
+        search.setPlaceholderText("search")
+
+        # Main layout for top menu
+        mainL = QHBoxLayout()
+        mainL.setContentsMargins(QMargins(10, 0, 10, 0))
+        mainL.addLayout(navigationL)
+        mainL.addStretch(2.5)
+        mainL.addLayout(buttonMenuL)
+        mainL.addStretch(2)
+        mainL.addWidget(search)
+
+        topMenuFrame.setLayout(mainL)
+
+
+    def createRepository(self, repFrame):
+        """ Function to create repository frame
+        """
+
+        repFrame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+
+        appGrid = QGridLayout()
+        appList = [("App1", "0"), ("App2", "1"), ("App3", "1"), ("App4", "1"),
+                   ("App5", "1"), ("App6", "0"), ("App7", "1"), ("App8", "0")]
+
+        numApp = len(appList)
+        cols = 4
+        rows = numApp / 4
+        for row in range(rows):
+            for col in range(cols):
+                appGrid.addWidget(QPushButton(appList.pop(0)[0]), row, col)
+
+        repFrame.setLayout(appGrid)
 
 
 if __name__ == '__main__':

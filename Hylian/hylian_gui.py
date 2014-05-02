@@ -2,7 +2,7 @@ import sys
 from PySide.QtCore import QSize, Qt, QMargins
 from PySide.QtGui import QApplication, QMainWindow, QDesktopWidget, QStatusBar, QTextEdit, QLineEdit, QPushButton, \
     QSizePolicy, QWidget, QFrame, QHBoxLayout, QStyleFactory, QVBoxLayout, QLabel, QToolButton, QIcon, QStyle, QPixmap, \
-    QGridLayout, QStackedLayout, QListWidget
+    QGridLayout, QStackedLayout, QListWidget, QLayout, QSpacerItem, QCheckBox, QBoxLayout
 
 
 class MainWindow(QMainWindow):
@@ -147,26 +147,105 @@ class MainWindow(QMainWindow):
         """ Function to create repository frame
         """
 
-        repFrame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
-        appGridLayout = QGridLayout()
-        appGridLayout.setSpacing(0)
-
+        # Call to Navy
+        # TODO: Funcio primitiva per a obtenir llista dapps{id, active} from Navy
         appList = [("bus", "0"), ("lightning", "1"), ("cams", "1"), ("factory", "1"),
                    ("health", "1"), ("roll", "0"), ("store", "1"), ("test", "0")]
 
+        # App grid menu
+        appGridLayout = QGridLayout()
+        appGridLayout.setContentsMargins(30, 15, 11, 20)
+        appGridLayout.setSpacing(0)
+
+        appsTopFrame = QFrame()
+        appsTopFrame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+        appsTopLabel = QLabel("Apps")
+        appsTopLayout = QVBoxLayout()
+        appsTopLayout.setContentsMargins(6, 3, 6, 3)
+        appsTopLayout.addWidget(appsTopLabel)
+        appsTopFrame.setLayout(appsTopLayout)
+        appGridLayout.addWidget(appsTopFrame, 0, 0, 1, 4)
+
         numApp = len(appList)
         cols = 4
-        rows = numApp / 4
-        for row in range(rows):
+        rows = numApp / cols
+        for row in range(1, rows + 1):
             for col in range(cols):
                 app = appList.pop(0)
-                but = QPushButton(app[0])
-                but.setIcon(QIcon('../Resources/Icons/AppPoC/'+ app[0] + '.png'))
-                but.setIconSize(QSize(60, 60))
-                #but.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-                appGridLayout.addWidget(but, row, col)
 
-        repFrame.setLayout(appGridLayout)
+                frame = QFrame()
+                if row % 2 != 0:
+                    frame.setStyleSheet("QFrame { background-color:rgb(250,250,250) }")
+                frame.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
+                frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+                vLayout = QVBoxLayout()
+                hLayout = QHBoxLayout()
+
+                but = QToolButton()
+                q = QIcon()
+                # TODO: Icons amb el color corresponent al seu estat!
+                q.addPixmap(QPixmap('../Resources/Icons/AppPoC/'+ app[0] + '.png'), QIcon.Disabled, QIcon.Off)
+                #q.addPixmap(QPixmap('../Resources/Icons/AppPoC/'+ app[0] + '.png'), QIcon.Normal)
+
+                but.setIcon(q)
+                but.setIconSize(QSize(50, 50))
+
+                titleLabel = QLabel(app[0])
+                #titleLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+                catLabel = QLabel("Test")
+                #catLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+                vLayout.addWidget(titleLabel)
+                vLayout.addWidget(catLabel)
+                vLayout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Preferred, QSizePolicy.Expanding))
+
+                hLayout.addWidget(but)
+                hLayout.addLayout(vLayout)
+                frame.setLayout(hLayout)
+                appGridLayout.addWidget(frame, row, col)
+
+
+        appGridLayout.addItem(QSpacerItem(0, 0, QSizePolicy.Preferred, QSizePolicy.Expanding), rows + 1, 0, 1, cols)
+
+
+        # Side menu
+        titleFrame = QFrame()
+        titleFrame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+        titleLabel = QLabel("Filter")
+        titleLayout = QVBoxLayout()
+        titleLayout.setContentsMargins(6, 3, 6, 3)
+        titleLayout.addWidget(titleLabel)
+        titleFrame.setLayout(titleLayout)
+
+        checkBoxFrame = QFrame()
+        checkBoxFrame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+        checkBoxLayout = QVBoxLayout()
+        checkBoxFrame.setLayout(checkBoxLayout)
+
+        instCBox= QCheckBox("Installed")
+        notInstCBox= QCheckBox("Not installed")
+        enabledCBox = QCheckBox("Enabled")
+        notEnabledCBox = QCheckBox("Not enabled")
+
+        checkBoxLayout.addWidget(instCBox)
+        checkBoxLayout.addWidget(notInstCBox)
+        checkBoxLayout.addWidget(enabledCBox)
+        checkBoxLayout.addWidget(notEnabledCBox)
+
+        sideMenuLayout = QVBoxLayout()
+        sideMenuLayout.setSpacing(0)
+        sideMenuLayout.setContentsMargins(0, 15, 30, 11)
+        sideMenuLayout.addWidget(titleFrame)
+        sideMenuLayout.addWidget(checkBoxFrame)
+        sideMenuLayout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Preferred, QSizePolicy.Expanding))
+
+        # Main layout management
+        mainRepLayout = QHBoxLayout()
+        mainRepLayout.addStretch(1)
+        mainRepLayout.addLayout(appGridLayout, 12)
+        mainRepLayout.addLayout(sideMenuLayout, 3)
+        mainRepLayout.addStretch(1)
+
+        repFrame.setLayout(mainRepLayout)
 
 
 if __name__ == '__main__':

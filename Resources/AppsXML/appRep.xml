@@ -1,26 +1,34 @@
 <rep>
     <app id="0"
          name="Bus"
+         cat="Traffic"
          iconPath="../Resources/Icons/AppPoC/bus.png"/>
     <app id="1"
          name="Lightning"
+         cat="Energy"
          iconPath="../Resources/Icons/AppPoC/lightning.png"/>
     <app id="2"
          name="Cams"
+         cat="Security"
          iconPath="../Resources/Icons/AppPoC/cams.png"/>
     <app id="3"
          name="Factory"
+         cat="Productivity"
          iconPath="../Resources/Icons/AppPoC/factory.png"/>
     <app id="4"
          name="Health"
+         cat="Security"
          iconPath="../Resources/Icons/AppPoC/health.png"/>
     <app id="5"
          name="Roll"
+         cat="Productivity"
          iconPath="../Resources/Icons/AppPoC/roll.png"/>
     <app id="6"
          name="Store"
+         cat="Productivity"
          iconPath="../Resources/Icons/AppPoC/store.png"/>
     <app id="7"
          name="Labs"
+         cat="Productivity"
          iconPath="../Resources/Icons/AppPoC/test.png"/>
 </rep>

@@ -190,7 +190,7 @@ class MainWindow(QMainWindow):
 
                 titleLabel = QLabel(app.name)
                 #titleLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
-                catLabel = QLabel("Test")
+                catLabel = QLabel(app.cat)
                 #catLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
                 vLayout.addWidget(titleLabel)
                 vLayout.addWidget(catLabel)

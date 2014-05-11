@@ -11,7 +11,7 @@ def getAppList():
     xmlRep = minidom.parse('../Resources/AppsXML/appRep.xml')
     appListXML = xmlRep.getElementsByTagName('app')
 
-    appList=[]
+    appList = []
     for item in appsNavy:
         app = App(item[0], item[1], appListXML)
         appList.append(app)

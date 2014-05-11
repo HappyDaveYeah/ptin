@@ -8,6 +8,7 @@ class App:
         for node in appListXML:
             if node.attributes['id'].value == id:
                 self.name = node.getAttribute('name')
+                self.cat = node.getAttribute('cat')
                 self.icon = QIcon()
                 # TODO: Icons amb el color corresponent al seu estat!
                 self.icon.addPixmap(QPixmap(node.getAttribute('iconPath')), QIcon.Disabled, QIcon.Off)

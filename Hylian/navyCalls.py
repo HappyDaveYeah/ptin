@@ -16,7 +16,5 @@ def getAppList():
         app = App(item[0], item[1], appListXML)
         appList.append(app)
 
-
-
     return appList
-    #return [("bus", "0"), ("lightning", "1"), ("cams", "1"), ("factory", "1"),("health", "1"), ("roll", "0"), ("store", "1"), ("test", "0")]
+

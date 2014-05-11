@@ -246,7 +246,7 @@ class MainWindow(QMainWindow):
         repFrame.setLayout(mainRepLayout)
 
     def openDialogApp(self, app):
-        dialogApp = DialogApp()
+        dialogApp = DialogApp(app)
         dialogApp.exec_()
 
 

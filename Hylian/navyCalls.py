@@ -5,15 +5,15 @@ __author__ = 'Nikiva'
 
 def getAppList():
     # TODO: remote call to Navy
-    appsNavy = [("0", "0"), ("1", "1"), ("2", "1"), ("3", "1"),
-                   ("4", "1"), ("5", "0"), ("6", "1"), ("7", "0")]
+    appsNavy = [("0", "0", "1"), ("1", "1", "1"), ("2", "1", "1"), ("3", "1", "1"),
+                   ("4", "1", "1"), ("5", "0", "0"), ("6", "1", "1"), ("7", "0", "0")]
 
     xmlRep = minidom.parse('../Resources/AppsXML/appRep.xml')
     appListXML = xmlRep.getElementsByTagName('app')
 
     appList = []
     for item in appsNavy:
-        app = App(item[0], item[1], appListXML)
+        app = App(item[0], item[1], item[2], appListXML)
         appList.append(app)
 
     return appList

@@ -3,7 +3,7 @@ from PySide.QtGui import QIcon, QPixmap
 __author__ = 'Nikiva'
 
 class App:
-    def __init__(self, id, status, appListXML):
+    def __init__(self, id, enabled, installed, appListXML):
 
         for node in appListXML:
             if node.attributes['id'].value == id:
@@ -16,4 +16,5 @@ class App:
                 break
 
         self.id = id
-        self.status = status
+        self.enabled = enabled
+        self.installed = installed

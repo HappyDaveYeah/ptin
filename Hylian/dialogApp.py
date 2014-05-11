@@ -13,14 +13,16 @@ class DialogApp(QDialog):
         self.label.setPixmap(app.icon.pixmap(50, 50, QIcon.Disabled, QIcon.Off))
         self.label.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
 
-        self.installedCheckBox = QCheckBox("Installed")
-        self.enabledCheckBox = QCheckBox("Enabled")
+
+        self.installedButt = QPushButton("Install")
+
+        self.enabledButt = QPushButton("Enable")
 
         self.rightLayout = QVBoxLayout()
-        self.checkBoxLayout = QHBoxLayout()
-        self.checkBoxLayout.addWidget(self.installedCheckBox)
-        self.checkBoxLayout.addWidget(self.enabledCheckBox)
-        self.rightLayout.addLayout(self.checkBoxLayout)
+        self.ButtLayout = QHBoxLayout()
+        self.ButtLayout.addWidget(self.installedButt)
+        self.ButtLayout.addWidget(self.enabledButt)
+        self.rightLayout.addLayout(self.ButtLayout)
         self.rightLayout.addStretch()
 
         self.mainLayout = QHBoxLayout()

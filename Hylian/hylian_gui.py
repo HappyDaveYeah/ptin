@@ -1,4 +1,5 @@
 import sys
+from dialogApp import *
 from PySide.QtCore import QSize, Qt, QMargins
 from PySide.QtGui import QApplication, QMainWindow, QDesktopWidget, QStatusBar, QTextEdit, QLineEdit, QPushButton, \
     QSizePolicy, QWidget, QFrame, QHBoxLayout, QStyleFactory, QVBoxLayout, QLabel, QToolButton, QIcon, QStyle, QPixmap, \
@@ -189,6 +190,7 @@ class MainWindow(QMainWindow):
 
                 but.setIcon(q)
                 but.setIconSize(QSize(50, 50))
+                but.clicked.connect(self.openDialogApp)
 
                 titleLabel = QLabel(app[0])
                 #titleLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
@@ -246,6 +248,10 @@ class MainWindow(QMainWindow):
         mainRepLayout.addStretch(1)
 
         repFrame.setLayout(mainRepLayout)
+
+    def openDialogApp(self):
+        dialogApp = DialogApp()
+        dialogApp.exec_()
 
 
 if __name__ == '__main__':

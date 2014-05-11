@@ -1,0 +1,26 @@
+<rep>
+    <app id="0"
+         name="Bus"
+         iconPath="../Resources/Icons/AppPoC/bus.png"/>
+    <app id="1"
+         name="Lightning"
+         iconPath="../Resources/Icons/AppPoC/lightning.png"/>
+    <app id="2"
+         name="Cams"
+         iconPath="../Resources/Icons/AppPoC/cams.png"/>
+    <app id="3"
+         name="Factory"
+         iconPath="../Resources/Icons/AppPoC/factory.png"/>
+    <app id="4"
+         name="Health"
+         iconPath="../Resources/Icons/AppPoC/health.png"/>
+    <app id="5"
+         name="Roll"
+         iconPath="../Resources/Icons/AppPoC/roll.png"/>
+    <app id="6"
+         name="Store"
+         iconPath="../Resources/Icons/AppPoC/store.png"/>
+    <app id="7"
+         name="Labs"
+         iconPath="../Resources/Icons/AppPoC/test.png"/>
+</rep>

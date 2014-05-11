@@ -1,4 +1,7 @@
+from functools import partial
 import sys
+import navyCalls
+from navyCalls import *
 from dialogApp import *
 from PySide.QtCore import QSize, Qt, QMargins
 from PySide.QtGui import QApplication, QMainWindow, QDesktopWidget, QStatusBar, QTextEdit, QLineEdit, QPushButton, \
@@ -149,9 +152,7 @@ class MainWindow(QMainWindow):
         """
 
         # Call to Navy
-        # TODO: Funcio primitiva per a obtenir llista dapps{id, active} from Navy
-        appList = [("bus", "0"), ("lightning", "1"), ("cams", "1"), ("factory", "1"),
-                   ("health", "1"), ("roll", "0"), ("store", "1"), ("test", "0")]
+        appList = navyCalls.getAppList()
 
         # App grid menu
         appGridLayout = QGridLayout()
@@ -183,16 +184,11 @@ class MainWindow(QMainWindow):
                 hLayout = QHBoxLayout()
 
                 but = QToolButton()
-                q = QIcon()
-                # TODO: Icons amb el color corresponent al seu estat!
-                q.addPixmap(QPixmap('../Resources/Icons/AppPoC/'+ app[0] + '.png'), QIcon.Disabled, QIcon.Off)
-                #q.addPixmap(QPixmap('../Resources/Icons/AppPoC/'+ app[0] + '.png'), QIcon.Normal)
-
-                but.setIcon(q)
+                but.setIcon(app.icon)
                 but.setIconSize(QSize(50, 50))
-                but.clicked.connect(self.openDialogApp)
+                but.clicked.connect(partial(self.openDialogApp, app))
 
-                titleLabel = QLabel(app[0])
+                titleLabel = QLabel(app.name)
                 #titleLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
                 catLabel = QLabel("Test")
                 #catLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
@@ -249,7 +245,7 @@ class MainWindow(QMainWindow):
 
         repFrame.setLayout(mainRepLayout)
 
-    def openDialogApp(self):
+    def openDialogApp(self, app):
         dialogApp = DialogApp()
         dialogApp.exec_()
 

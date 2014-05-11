@@ -50,6 +50,8 @@ class DialogApp(QDialog):
         self.installedButt.setText("Uninstall")
         self.installedButt.clicked.connect(self.uninstallApp)
         self.enabledButt.setEnabled(True)
+        self.app.installed = "1"
+        self.app.enabled = "0"
 
     def uninstallApp(self):
         navyCalls.delete(self.app)
@@ -58,13 +60,17 @@ class DialogApp(QDialog):
         self.enabledButt.setText("Enable")
         self.enabledButt.clicked.connect(self.enableApp)
         self.enabledButt.setEnabled(False)
+        self.app.installed = "0"
+        self.app.enabled = "0"
 
     def enableApp(self):
         navyCalls.enable(self.app)
         self.enabledButt.setText("Disable")
         self.enabledButt.clicked.connect(self.disableApp)
+        self.app.enabled = "1"
 
     def disableApp(self):
         navyCalls.disable(self.app)
         self.enabledButt.setText("Enable")
         self.enabledButt.clicked.connect(self.enableApp)
+        self.app.enabled = "0"

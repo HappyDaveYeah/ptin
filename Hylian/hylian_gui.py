@@ -1,7 +1,6 @@
 from functools import partial
 import sys
 import navyCalls
-from navyCalls import *
 from dialogApp import *
 from PySide.QtCore import QSize, Qt, QMargins
 from PySide.QtGui import QApplication, QMainWindow, QDesktopWidget, QStatusBar, QTextEdit, QLineEdit, QPushButton, \

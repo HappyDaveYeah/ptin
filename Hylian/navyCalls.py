@@ -4,7 +4,7 @@ from app import *
 __author__ = 'Nikiva'
 
 def getAppList():
-    # TODO: remote call to Navy
+    # TODO: GET call to Navy
     appsNavy = [("0", "0", "1"), ("1", "1", "1"), ("2", "1", "1"), ("3", "1", "1"),
                    ("4", "1", "1"), ("5", "0", "0"), ("6", "1", "1"), ("7", "0", "0")]
 
@@ -18,3 +18,22 @@ def getAppList():
 
     return appList
 
+
+def add(app):
+    #TODO: ADD call to Navy
+    pass
+
+
+def delete(app):
+    #TODO: DEL call to Navy
+    pass
+
+
+def enable(app):
+    #TODO: START call to Navy
+    pass
+
+
+def disable(app):
+    #TODO: STOP call to Navy
+    pass

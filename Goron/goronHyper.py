@@ -25,8 +25,7 @@ for i in range(0, 10):
             s.send(l)
             l = f.read(1024)
         f.close()
-
-    data = s.recv(1024)
-    print(data)
+    response = s.recv(1024)
+    print(response)
 
 s.close()

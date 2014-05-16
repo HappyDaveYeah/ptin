@@ -9,12 +9,8 @@ def addApp(appName):
 
     f = open('new' + appName,'wb')
     conn.send("")
-    while (True):
-        l = conn.recv(1024)
-        while (l):
-            f.write(l)
-            l = conn.recv(1024)
-
+    l = conn.recv(1024)
+    f.write(l)
     f.close()
     #print("SEND: App " + appName + " Added to NAVI.")
     data = "SERVER: App " + appName + " Added to NAVI."
@@ -63,7 +59,7 @@ def makeCommand(command=None):
 def responsePetition(petition=None):
     if (petition[0] == 'ADD'):
         response = addApp(petition[1])
-    elif (petition[0] == 'DELETE'):
+    elif (petition[0] == 'DEL'):
         response = deleteApp(petition[1])
     elif (petition[0] == 'START'):
         response = startApp(petition[1])
@@ -78,7 +74,8 @@ def responsePetition(petition=None):
 
     return response
 
-#------------------------MAIN---------------------------
+#------------------------MAIN---------------------------#
+
 HOST = ''
 PORT = 50007
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -96,6 +93,7 @@ while True:
     data[1] = conn.recv(1024)
     print("RECIEVED: " + data[0] + "  " + data[1])
     response = responsePetition(data)
+    print response
     conn.send(response)
     if not data: break
 conn.close()

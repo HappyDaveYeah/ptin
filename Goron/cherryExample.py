@@ -15,9 +15,9 @@ class user:
     def to_JSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
-# u = user()
-# u.name = 'david'
-# u.age = 3
+u = user()
+u.name = 'david'
+u.age = 3
 # u.mihijo = user()
 # u.mihijo.name = 'pepe'
 # u.mihijo.age = 35
@@ -31,11 +31,19 @@ class Navi(object):
         return "You have successfully reached " + host
 
     @cherrypy.expose
+    @cherrypy.tools.json_out()
     def ADD(self, id=None):
         host = cherrypy.request.headers['Host']
         message = id + "You have successfully reached " + host
-        return message
+        #return message
         #return u.to_JSON()
+        return json.dumps({"message": "Hello World!"})
+
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def switch(self, id):
+        print("Licht nr {} wurde geschaltet".format(id))
+        return json.dumps({"text" : "schalter {} ".format(id)})
 
 cherrypy.config.update({'server.socket_host': '0.0.0.0'})
 cherrypy.quickstart(Navi())

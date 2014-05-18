@@ -43,13 +43,13 @@ class Navi(object):
         message = id + "You have successfully reached " + host
         #return message
         #return u.to_JSON()
-        return {"complete": 1}
+        return json.dumps({"complete": 1})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getRep(self):
-        apps = {'1': 1, '2': 0, '3': 1}
-        return apps
+        apps = {'1': 1, '3': 0, '7': 1}
+        return json.dumps(apps)
 
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})
 cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)

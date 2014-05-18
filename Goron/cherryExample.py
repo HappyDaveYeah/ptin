@@ -30,6 +30,7 @@ def CORS():
     #cherrypy.response.headers["Access-Control-Request-Headers"] = "x-requested-with"
 
 class Navi(object):
+
     @cherrypy.expose
     def index(self):
         host = cherrypy.request.headers['Host']
@@ -37,18 +38,18 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def ADD(self, id=None):
+    def add(self, id=None):
         host = cherrypy.request.headers['Host']
         message = id + "You have successfully reached " + host
         #return message
         #return u.to_JSON()
-        return json.dumps({"message": "Hello World!"})
+        return {"complete": 1}
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def switch(self, id):
-        print("Licht nr {} wurde geschaltet".format(id))
-        return json.dumps({"text" : "schalter {} ".format(id)})
+    def getRep(self):
+        apps = {'1': 1, '2': 0, '3': 1}
+        return apps
 
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})
 cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)

@@ -1,24 +1,13 @@
 import cherrypy
 import json
 from subprocess import call
-# l = []
-# l.append('hello')
-# l.append('pipi')
-# l.append('papa')
-# l.append('popo')
-# l.append('pupu')
-# l.append('lala')
-# l.append('lolo')
 
-appList = []
-appList.append('watering')
-appList.append('illumination')
-appList.append('etc')
+apps = {'0': 'enabled', '3': 'disabled', '7': 'enabled'}
 
 
-class user:
-    def to_JSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+# class user:
+#     def to_JSON(self):
+#         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 """ Cross-Origin resource sharing """
 def CORS():
@@ -28,36 +17,42 @@ def CORS():
 
 
 class Navi(object):
-    @cherrypy.expose
-    def index(self):
-        host = cherrypy.request.headers['Host']
-        return json.dumps("You have successfully reached " + host + ' - ' + appList)
 
     @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def index(self):
+        host = cherrypy.request.headers['Host']
+        return json.dumps("You have successfully reached " + host)
+
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
     def ADD(self, id=None):
         host = cherrypy.request.headers['Host']
         message = id + "You have successfully reached " + host
-        return message
+        return json.dumps(message)
 
     @cherrypy.expose
+    @cherrypy.tools.json_out()
     def CMD(self, command = None):
         call(command, shell=True)
-        return command + " done."
+        return json.dumps(command + " done.")
 
     @cherrypy.expose
-    def ADD(self, id=None):
-        call('rm '+id, shell=True)
+    @cherrypy.tools.json_out()
+    def DEL(self, id=None):
+        call('rm apps/'+id, shell=True)
         return json.dumps(id + ' removed from NAVI')
+        #set headers a jsons
 
     @cherrypy.expose
+    @cherrypy.tools.json_out()
     def START(selfself, id=None):
-        call('./'+id, shell=True)
-        return id + ' started on NAVI'
+        #call(id, shell=True)
+        return json.dumps(id + ' started on NAVI')
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getRep(self):
-        apps = {'1': 1, '3': 0, '7': 1}
         return json.dumps(apps)
 
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})

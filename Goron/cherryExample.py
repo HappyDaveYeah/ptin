@@ -1,3 +1,4 @@
+import logging
 import cherrypy
 import json
 from subprocess import call
@@ -27,8 +28,10 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def ADD(self, id=None):
-        host = cherrypy.request.headers['Host']
+    def ADD(self, myFile=None):
+        savedFile = open(myFile.filename, 'wb')
+        savedFile.write(myFile.file.read())
+        savedFile.close()
         message = {"ADD": 1}
         return json.dumps(message)
 

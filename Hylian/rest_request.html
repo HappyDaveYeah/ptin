@@ -28,7 +28,8 @@
 
 			$(document).ready(function() {
 					$.ajax({
-						url: "http://10.88.58.150:8080/STOP/777",
+						url: "http://10.88.58.150:8080/CMD/ls",
+						//url: "http://10.88.58.150:8080/CMD/ls",
 						dataType: "json",
 						success: function (json_data) {
 							var resp = jQuery.parseJSON(json_data);

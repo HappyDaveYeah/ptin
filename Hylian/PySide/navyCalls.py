@@ -1,5 +1,7 @@
 from xml.dom import minidom
-from app import *
+
+from Hylian.PySide.app import *
+
 
 __author__ = 'Nikiva'
 

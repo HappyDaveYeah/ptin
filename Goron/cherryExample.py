@@ -1,6 +1,7 @@
 import cherrypy
 import json
 from subprocess import call
+import os
 
 apps = {'0': 'enabled', '3': 'disabled', '7': 'enabled'}
 
@@ -37,6 +38,13 @@ class Navi(object):
         call(command, shell=True)
         message = {command: 1}
         return json.dumps(message)
+        # out = []
+        # pipe = os.popen(command)
+        # for line in pipe:
+        #     print line
+        #     out.append(line)
+        # return json.dumps(out)
+
 
     @cherrypy.expose
     @cherrypy.tools.json_out()

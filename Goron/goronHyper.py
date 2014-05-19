@@ -2,7 +2,7 @@ __author__ = 'dmicomrt'
 import socket
 import sys
 
-HOST = 'localhost'  # HOST
+HOST = '10.88.49.88'  # HOST
 PORT = 50007  # PORT
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))

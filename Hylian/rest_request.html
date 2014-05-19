@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <title>Consume a REST Web Service</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+
+        <div id="Output"></div>
+
+            <script>
+            $(document).ready(function() {
+					$.ajax({
+						url: "http://localhost:8080/getRep",
+						dataType: "json",
+						success: function (json_data) {
+							//$("#Output").html(resp["2"]);
+							var apps = jQuery.parseJSON(json_data);
+							$.each(apps, function(app, enabled){
+								console.log(app + ": " + enabled);
+							});
+						},
+						error: function (e) {
+							alert('Error121212: ' + e);
+						}
+					});
+			});
+            </script>
+
+</body>

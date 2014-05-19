@@ -1,6 +1,7 @@
-from PySide.QtCore import Qt
-from PySide.QtGui import QVBoxLayout, QPushButton, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QDialog, QIcon, QFrame
-import navyCalls
+from PySide.QtGui import QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QDialog, QIcon, QFrame
+
+from Hylian.PySide import navyCalls
+
 
 __author__ = 'Nikiva'
 

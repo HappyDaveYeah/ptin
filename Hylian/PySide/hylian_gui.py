@@ -1,11 +1,11 @@
 from functools import partial
 import sys
-import navyCalls
-from dialogApp import *
+
 from PySide.QtCore import QSize, Qt, QMargins
-from PySide.QtGui import QApplication, QMainWindow, QDesktopWidget, QStatusBar, QTextEdit, QLineEdit, QPushButton, \
-    QSizePolicy, QWidget, QFrame, QHBoxLayout, QStyleFactory, QVBoxLayout, QLabel, QToolButton, QIcon, QStyle, QPixmap, \
-    QGridLayout, QStackedLayout, QListWidget, QLayout, QSpacerItem, QCheckBox, QBoxLayout
+from PySide.QtGui import QApplication, QMainWindow, QDesktopWidget, QStatusBar, QLineEdit, QSizePolicy, QWidget, \
+    QToolButton, QGridLayout, QStackedLayout, QSpacerItem, QCheckBox
+
+from Hylian.PySide.dialogApp import *
 
 
 class MainWindow(QMainWindow):

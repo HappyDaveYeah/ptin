@@ -10,12 +10,11 @@
         <div id="Output"></div>
 
             <script>
-            $(document).ready(function() {
+            /*$(document).ready(function() {
 					$.ajax({
-						url: "http://localhost:8080/getRep",
+						url: "http://10.88.58.150:8080/getRep",
 						dataType: "json",
 						success: function (json_data) {
-							//$("#Output").html(resp["2"]);
 							var apps = jQuery.parseJSON(json_data);
 							$.each(apps, function(app, enabled){
 								console.log(app + ": " + enabled);
@@ -25,7 +24,22 @@
 							alert('Error121212: ' + e);
 						}
 					});
+			});*/
+
+			$(document).ready(function() {
+					$.ajax({
+						url: "http://10.88.58.150:8080/STOP/777",
+						dataType: "json",
+						success: function (json_data) {
+							var resp = jQuery.parseJSON(json_data);
+							console.log(resp);
+						},
+						error: function (e) {
+							alert('Error121212: ' + e);
+						}
+					});
 			});
+
             </script>
 
 </body>

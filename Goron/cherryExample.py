@@ -28,27 +28,30 @@ class Navi(object):
     @cherrypy.tools.json_out()
     def ADD(self, id=None):
         host = cherrypy.request.headers['Host']
-        message = id + "You have successfully reached " + host
+        message = {"ADD": 1}
         return json.dumps(message)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def CMD(self, command = None):
         call(command, shell=True)
-        return json.dumps(command + " done.")
+        message = {command: 1}
+        return json.dumps(message)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def DEL(self, id=None):
         call('rm apps/'+id, shell=True)
-        return json.dumps(id + ' removed from NAVI')
+        message = {"DEL": 1}
+        return json.dumps(message)
         #set headers a jsons
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def START(selfself, id=None):
         #call(id, shell=True)
-        return json.dumps(id + ' started on NAVI')
+        message = {"START": 1}
+        return json.dumps(message)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()

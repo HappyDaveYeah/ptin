@@ -1,0 +1,122 @@
+<!--Start Breadcrumb-->
+<div class="row">
+	<div id="breadcrumb" class="col-xs-12">
+		<ol class="breadcrumb">
+			<li><a href="index.html">Repository</a></li>
+		</ol>
+	</div>
+</div>
+<!--End Breadcrumb-->
+<!--Start Dashboard 2-->
+<div class="row-fluid">
+	<div id="dashboard_tabs" class="col-xs-12 col-sm-10 col-md-12">		
+		<!--Start Dashboard Tab 4-->
+		<div id="dashboard-servers" class="row" style="visibility: visible; position: relative;">
+			<div class="col-xs-12 col-sm-6 col-md-4 ow-server">
+				<h4 class="page-header text-right"><i class="fa fa-linux"></i>Health</h4>				
+				<div class="row ow-server-bottom">
+					<div class="col-sm-4">
+						<img src="img/health.png" class="img-rounded app">
+					</div>
+					<div class="col-sm-8">
+						<div class="row"><i class="fa fa-lock"></i> Security</div>
+						<div class="row"><i class="fa fa-clock-o"></i> Uptime - 10 days</div>
+						<div class="toggle-switch toggle-switch-primary">
+							<label>
+								<input type="checkbox"></input>
+								<div class="toggle-switch-inner"></div>
+								<div class="toggle-switch-switch">
+									<i class="fa fa-check"></i>
+								</div>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4 ow-server">
+				<h4 class="page-header text-right"><i class="fa fa-windows"></i>Bus</h4>
+				<div class="row ow-server-bottom">
+					<div class="col-sm-4">
+						<img src="img/bus.png" class="img-rounded app">
+					</div>
+					<div class="col-sm-8">
+						<div class="row"><i class="fa fa-windows"></i> Windows 2013</div>
+						<div class="row"><i class="fa fa-user"></i> Active users - 39</div>
+						<div class="row"><i class="fa fa-bolt"></i> Uptime - 2 month 1 day</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4 ow-server">
+				<h4 class="page-header text-right"><i class="fa fa-linux"></i>Cams</h4>
+				<div class="row ow-server-bottom">
+					<div class="col-sm-4">
+						<img src="img/cams.png" class="img-rounded app">
+					</div>
+					<div class="col-sm-8">
+						<div class="row"><i class="fa fa-linux"></i> CentOS 6.5</div>
+						<div class="row"><i class="fa fa-user"></i> Active users - 298</div>
+						<div class="row"><i class="fa fa-bolt"></i> Uptime - 9 month 17 day</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4 ow-server">
+				<h4 class="page-header text-right"><i class="fa fa-linux"></i>Store</h4>
+				<div class="row ow-server-bottom">
+					<div class="col-sm-4">
+						<img src="img/store.png" class="img-rounded app">
+					</div>
+					<div class="col-sm-8">
+						<div class="row"><i class="fa fa-linux"></i> Centos 6.5</div>
+						<div class="row"><i class="fa fa-user"></i> Active users - 1989</div>
+						<div class="row"><i class="fa fa-bolt"></i> Uptime - 2 years 3 month</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4 ow-server">
+				<h4 class="page-header text-right"><i class="fa fa-linux"></i>Test</h4>
+				<div class="row ow-server-bottom">
+					<div class="col-sm-4">
+						<img src="img/test.png" class="img-rounded app">
+					</div>
+					<div class="col-sm-8">
+						<div class="row"><i class="fa fa-linux"></i> Debian 6.4</div>
+						<div class="row"><i class="fa fa-phone"></i> Active calls - 86</div>
+						<div class="row"><i class="fa fa-bolt"></i> Uptime - 3 month 19 day</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4 ow-server">
+				<h4 class="page-header text-right"><i class="fa fa-linux"></i>Lightning</h4>
+				<div class="row ow-server-bottom">
+					<div class="col-sm-4">
+						<img src="img/lightning.png" class="img-rounded app">
+					</div>
+					<div class="col-sm-8">
+						<div class="row"><i class="fa fa-linux"></i> CentOS 6.5</div>
+						<div class="row"><i class="fa fa-archive"></i> Repositories - 17</div>
+						<div class="row"><i class="fa fa-bolt"></i> Uptime - 4 month 21 day</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<!--End Dashboard Tab 4-->
+	</div>
+	<div class="clearfix"></div>
+</div>
+<!--End Dashboard 2 -->
+<div style="height: 40px;"></div>
+<script type="text/javascript">
+// Array for random data for Sparkline
+var sparkline_arr_1 = SparklineTestData();
+var sparkline_arr_2 = SparklineTestData();
+var sparkline_arr_3 = SparklineTestData();
+$(document).ready(function() {
+	// Make all JS-activity for dashboard
+	DashboardTabChecker();
+	// Load Knob plugin and run callback for draw Knob charts for dashboard(tab-servers)
+	LoadKnobScripts(DrawKnobDashboard);
+	// Make beauty hover in table
+	$("#ticker-table").beautyHover();
+});
+</script>

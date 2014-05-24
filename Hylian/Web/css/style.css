@@ -1113,19 +1113,30 @@ td.beauty-hover {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
 }
 .toggle-switch-inner:before {
-  content: "Installed";
   padding-left: 20px;
   -webkit-border-radius: 20px 0 0 20px;
   -moz-border-radius: 20px 0 0 20px;
   border-radius: 20px 0 0 20px;
 }
 .toggle-switch-inner:after {
-  content: "Uninstalled";
   padding-right: 10px;
   text-align: right;
   -webkit-border-radius: 0 20px 20px 0;
   -moz-border-radius: 0 20px 20px 0;
   border-radius: 0 20px 20px 0;
+}
+#enable.toggle-switch-inner:before {
+  content: "Enabled";
+}
+#install.toggle-switch-inner:before {
+  content: "Installed";
+}
+#enable.toggle-switch-inner:after {
+  content: "Disabled";
+  padding-right: 18px;
+}
+#install.toggle-switch-inner:after {
+  content: "Uninstalled";
 }
 .toggle-switch-switch {
   width: 20px;

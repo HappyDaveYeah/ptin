@@ -44,12 +44,16 @@
                 $.each (app, function (key, val) {
                     var installed = '';
                     var enabled = '';
+                    var disabled = '';
                     var appFound = $.grep(appsNavi.apps, function(app){ return app.id == val.id; });
                     if(appFound.length == 1 ){
                         installed = 'checked=""';
                         if(appFound[0].enabled == 1){
                             enabled = 'checked=""';
                         }
+                    }
+                    else {
+                        disabled = 'disabled = "true"'
                     }
 
                     appContainer = '<div class="col-xs-12 col-sm-6 col-md-4 ow-server">' +
@@ -76,7 +80,7 @@
                                                     '<div class="col-md-6">' +
                                                         '<div class="toggle-switch toggle-switch-primary">' +
                                                             '<label>' +
-                                                                '<input type="checkbox" ' + enabled + '" id="enable" value="' + val.id + '"></input>' +
+                                                                '<input type="checkbox" ' + enabled + '" id="enable" value="' + val.id + '" ' + disabled + '></input>' +
                                                                 '<div class="toggle-switch-inner" id="enable"></div>' +
                                                                 '<div class="toggle-switch-switch">' +
                                                                     '<i class="fa fa-check"></i>' +
@@ -103,39 +107,37 @@
 
 
         $(document).on('click', 'input[type=checkbox]', function(){
-            if($(this).is(':checked')){
-                if(this.id == "enable") {
-                    $.ajax({
-                        url: "http://" + naviIP + ":8080/START/" + $(this).val(),
-                        dataType: "json",
-                        success: function (json_data) {
-                            var resp = jQuery.parseJSON(json_data);
-                            console.log(resp.START);
-                        },
-                        error: function (e) {
-                            alert('Error Enable App: ' + e);
-                        }
-                    });
+            if(this.id == "enable") {
+                if($(this).is(':checked')){
+                    appOperation("START", $(this).val());
+                    console.log((this.id) + " " + $(this).val() + " checked");
                 }
-
-               console.log((this.id) + " " + $(this).val() + " checked");
+                else {
+                    appOperation("STOP", $(this).val());
+                    console.log((this.id) + " " + $(this).val() + " unchecked");
+                }
             }
-            else{
-               console.log((this.id) + " " + $(this).val() + " unchecked");
+            else if(this.id == "install") {
+                if($(this).is(':checked')){
+                    $("#enable[value='" + $(this).val() + "']").prop('disabled', false);
+                }
+                else {
+                    $("#enable[value='" + $(this).val() + "']").prop('checked', false);
+                    $("#enable[value='" + $(this).val() + "']").prop('disabled', true);
+                }
             }
         });
 
-        function naviStart(appID) {
+        function appOperation(primitive, appID) {
             $.ajax({
-                url: "http://" + naviIP + ":8080/START/" + appID,
+                url: "http://" + naviIP + ":8080/" + primitive + "/" + appID,
                 dataType: "json",
                 success: function (json_data) {
                     var resp = jQuery.parseJSON(json_data);
-                    var result = "hola";
-                    return result;
+                    console.log("Resp -> " + resp);
                 },
                 error: function (e) {
-                    alert('Error Enable App: ' + e);
+                    alert('Error Operation App: ' + e);
                 }
             });
         }

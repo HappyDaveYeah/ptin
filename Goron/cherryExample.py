@@ -60,7 +60,7 @@ class Navi(object):
     @cherrypy.tools.json_out()
     def STOP(self, id=None):
         response = call('docker stop ' + id)
-        message = {'STOP': response}
+        message = {"STOP": response}
         return json.dumps(message)
 
 

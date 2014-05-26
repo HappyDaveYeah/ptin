@@ -1,3 +1,4 @@
+import urllib
 import cherrypy
 import json
 from subprocess import call
@@ -16,10 +17,8 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def ADD(self, myFile=None):
-        savedFile = open(myFile.filename, 'wb')
-        savedFile.write(myFile.file.read())
-        savedFile.close()
+    def ADD(self, id=None):
+        #urllib.urlretrieve ("http://37.187.9.5:7777/repository/cams/cams.txt", "file.txt")
         response = 1
         return json.dumps(response)
 
@@ -38,8 +37,8 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def DEL(self, id=None):
-        retValue = call('rm apps/'+id, shell=True)
-        return json.dumps(retValue)
+        response = call('rm apps/'+id, shell=True)
+        return json.dumps(response)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()

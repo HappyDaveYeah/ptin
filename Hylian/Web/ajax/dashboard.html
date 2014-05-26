@@ -119,6 +119,7 @@
             }
             else if(this.id == "install") {
                 if($(this).is(':checked')){
+                    appOperation("ADD", $(this).val());
                     $("#enable[value='" + $(this).val() + "']").prop('disabled', false);
                 }
                 else {
@@ -127,6 +128,8 @@
                 }
             }
         });
+
+
 
         function appOperation(primitive, appID) {
             $.ajax({

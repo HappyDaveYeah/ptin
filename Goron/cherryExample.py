@@ -16,25 +16,18 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def index(self):
-        host = cherrypy.request.headers['Host']
-        return json.dumps("You have successfully reached " + host)
-
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
     def ADD(self, myFile=None):
         savedFile = open(myFile.filename, 'wb')
         savedFile.write(myFile.file.read())
         savedFile.close()
-        message = {"ADD": 1}
-        return json.dumps(message)
+        response = 1
+        return json.dumps(response)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def CMD(self, command = None):
         response = call(command, shell=True)
-        message = {command: response}
-        return json.dumps(message)
+        return json.dumps(response)
         # out = []
         # pipe = os.popen(command)
         # for line in pipe:
@@ -46,22 +39,19 @@ class Navi(object):
     @cherrypy.tools.json_out()
     def DEL(self, id=None):
         retValue = call('rm apps/'+id, shell=True)
-        message = {"DEL": retValue}
-        return json.dumps(message)
+        return json.dumps(retValue)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def START(self, id=None):
         response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
-        message = {"START": response}
-        return json.dumps(message)
+        return json.dumps(response)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def STOP(self, id=None):
         response = call('docker stop ' + id)
-        message = {"STOP": response}
-        return json.dumps(message)
+        return json.dumps(response)
 
 
     @cherrypy.expose

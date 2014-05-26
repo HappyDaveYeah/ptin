@@ -105,8 +105,17 @@
         $(document).on('click', 'input[type=checkbox]', function(){
             if($(this).is(':checked')){
                 if(this.id == "enable") {
-                    var res = naviStart($(this).val());
-                    console.log(res);
+                    $.ajax({
+                        url: "http://" + naviIP + ":8080/START/" + $(this).val(),
+                        dataType: "json",
+                        success: function (json_data) {
+                            var resp = jQuery.parseJSON(json_data);
+                            console.log(resp.START);
+                        },
+                        error: function (e) {
+                            alert('Error Enable App: ' + e);
+                        }
+                    });
                 }
 
                console.log((this.id) + " " + $(this).val() + " checked");

@@ -20,11 +20,38 @@
 <div style="height: 40px;"></div>
 
 <script type="text/javascript">
+    //IP del Navi i del repository
+    var naviIP = "localhost";
+    var repIP = "http://37.187.9.5:7777/repository/repo.json";
+
     $(document).ready(function() {
-        $.getJSON( "http://37.187.9.5:7777/repository/repo.json", function( data ) {
-            var apps = [];
+        var appsNavi;
+        var appsRep = [];
+        $.getJSON( repIP, function(data) {
+            $.ajax({
+                url: "http://" + naviIP + ":8080/getRep",
+                async: false,
+                dataType: "json",
+                success: function (json_data) {
+                    appsNavi = jQuery.parseJSON(json_data);
+                },
+                error: function (e) {
+                    alert('Navi Connection Error: ' + e);
+                }
+			});
+
             $.each(data, function(key, app) {
                 $.each (app, function (key, val) {
+                    var installed = '';
+                    var enabled = '';
+                    var appFound = $.grep(appsNavi.apps, function(app){ return app.id == val.id; });
+                    if(appFound.length == 1 ){
+                        installed = 'checked=""';
+                        if(appFound[0].enabled == 1){
+                            enabled = 'checked=""';
+                        }
+                    }
+
                     appContainer = '<div class="col-xs-12 col-sm-6 col-md-4 ow-server">' +
                                         '<h4 class="page-header text-right"><i class="fa fa-linux"></i>' + val.name + '</h4>' +
                                         '<div class="row ow-server-bottom">' +
@@ -38,7 +65,7 @@
                                                     '<div class="col-md-6">' +
                                                         '<div class="toggle-switch toggle-switch-primary">' +
                                                             '<label>' +
-                                                                '<input type="checkbox" id="install" value="' + val.id + '"></input>' +
+                                                                '<input type="checkbox" ' + installed + '" id="install" value="' + val.id + '"></input>' +
                                                                 '<div class="toggle-switch-inner" id="install"></div>' +
                                                                 '<div class="toggle-switch-switch">' +
                                                                     '<i class="fa fa-check"></i>' +
@@ -49,7 +76,7 @@
                                                     '<div class="col-md-6">' +
                                                         '<div class="toggle-switch toggle-switch-primary">' +
                                                             '<label>' +
-                                                                '<input type="checkbox" id="enable" value="' + val.id + '"></input>' +
+                                                                '<input type="checkbox" ' + enabled + '" id="enable" value="' + val.id + '"></input>' +
                                                                 '<div class="toggle-switch-inner" id="enable"></div>' +
                                                                 '<div class="toggle-switch-switch">' +
                                                                     '<i class="fa fa-check"></i>' +
@@ -61,7 +88,7 @@
                                             '</div>' +
                                         '</div>' +
                                     '</div>';
-                    apps.push(appContainer);
+                    appsRep.push(appContainer);
                 });
             });
 
@@ -69,12 +96,19 @@
                 "id": "dashboard-servers",
                 "class": "row",
                 "style": "visibility: visible; position: relative;",
-                html: apps.join("")
+                html: appsRep.join("")
             }).appendTo("#dashboard_tabs");
         });
 
+
+
         $(document).on('click', 'input[type=checkbox]', function(){
             if($(this).is(':checked')){
+                if(this.id == "enable") {
+                    var res = naviStart($(this).val());
+                    console.log(res);
+                }
+
                console.log((this.id) + " " + $(this).val() + " checked");
             }
             else{
@@ -82,5 +116,21 @@
             }
         });
 
+        function naviStart(appID) {
+            $.ajax({
+                url: "http://" + naviIP + ":8080/START/" + appID,
+                dataType: "json",
+                success: function (json_data) {
+                    var resp = jQuery.parseJSON(json_data);
+                    var result = "hola";
+                    return result;
+                },
+                error: function (e) {
+                    alert('Error Enable App: ' + e);
+                }
+            });
+        }
+
     });
+
 </script>

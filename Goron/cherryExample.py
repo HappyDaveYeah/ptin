@@ -2,7 +2,7 @@ import cherrypy
 import json
 from subprocess import call
 
-apps = {"apps":[{"id":0,"enabled":1,"installed":1},{"id":1,"enabled":0,"installed":1},{"id":3,"enabled":0,"installed":1},{"id":5,"enabled":1,"installed":1}]}
+apps = {"apps":[{"id":0,"enabled":1},{"id":1,"enabled":0},{"id":3,"enabled":0},{"id":5,"enabled":1}]}
 
 """ Cross-Origin resource sharing """
 def CORS():

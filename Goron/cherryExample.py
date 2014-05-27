@@ -1,5 +1,4 @@
 import urllib
-import urllib2
 import cherrypy
 import json
 from subprocess import call
@@ -7,7 +6,7 @@ import requests
 
 apps = {"apps":[{"id":0,"enabled":1},{"id":1,"enabled":0},{"id":3,"enabled":0},{"id":5,"enabled":1}]}
 repIP = "37.187.9.5:7777"
-rep = {}
+repository = []
 processData = []
 
 
@@ -19,23 +18,23 @@ def CORS():
 
 
 class Navi(object):
+    """ Descarrega el repository dapps """
     @staticmethod
     def getRep():
         r = requests.get('http://' + repIP + '/repository/repo.json')
-        rep = r.json()['apps']
+        repository.extend(r.json()['apps'])
 
+    """ Cerca de l'app en el repository obtingut """
     def getAppFromRep(self, id=None):
-        r = requests.get('http://' + repIP + '/repository/repo.json')
-        data = r.json()
-        # Cerca de l'app en el repository obtingut
+        #
         i = 0
         trobat = False
-        num_apps = len(rep)
+        num_apps = len(repository)
         app = {}
         while i < num_apps and not trobat:
-            if rep[i]['id'] == int(id):
+            if repository[i]['id'] == int(id):
                 trobat = True
-                app = rep[i]
+                app = repository[i]
             i += 1
         return app
 
@@ -43,7 +42,6 @@ class Navi(object):
     @cherrypy.tools.json_out()
     def ADD(self, id=None):
         app = self.getAppFromRep(id)
-
         # Descarrega de lapp
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], app['file_name'])
 
@@ -102,7 +100,6 @@ class Navi(object):
 
 
 Navi.getRep()
-print rep
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})
 cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)
 cherrypy.quickstart(Navi())

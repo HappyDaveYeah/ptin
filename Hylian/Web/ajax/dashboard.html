@@ -21,15 +21,15 @@
 
 <script type="text/javascript">
     //IP del Navi i del repository
-    var naviIP = "localhost";
-    var repIP = "http://37.187.9.5:7777/repository/repo.json";
+    var naviIP = "localhost:8080";
+    var repIP = "37.187.9.5:7777";
 
     $(document).ready(function() {
         var appsNavi;
         var appsRep = [];
-        $.getJSON( repIP, function(data) {
+        $.getJSON( "http://" + repIP + "/repository/repo.json", function(data) {
             $.ajax({
-                url: "http://" + naviIP + ":8080/getRep",
+                url: "http://" + naviIP + "/getRep",
                 async: false,
                 dataType: "json",
                 success: function (json_data) {
@@ -133,7 +133,7 @@
 
         function appOperation(primitive, appID) {
             $.ajax({
-                url: "http://" + naviIP + ":8080/" + primitive + "/" + appID,
+                url: "http://" + naviIP + "/" + primitive + "/" + appID,
                 dataType: "json",
                 success: function (json_data) {
                     var resp = jQuery.parseJSON(json_data);

@@ -1,9 +1,13 @@
 import urllib
+import urllib2
 import cherrypy
 import json
 from subprocess import call
+import requests
 
 apps = {"apps":[{"id":0,"enabled":1},{"id":1,"enabled":0},{"id":3,"enabled":0},{"id":5,"enabled":1}]}
+repIP = "37.187.9.5:7777"
+
 
 """ Cross-Origin resource sharing """
 def CORS():
@@ -18,7 +22,23 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def ADD(self, id=None):
-        #urllib.urlretrieve ("http://37.187.9.5:7777/repository/cams/cams.txt", "file.txt")
+        r = requests.get('http://' + repIP + '/repository/repo.json')
+        data = r.json()
+
+        # Cerca de l'app en el repository obtingut
+        i = 0
+        trobat = False
+        num_apps = len(data['apps'])
+        app = {}
+        while i < num_apps and not trobat:
+            if data['apps'][i]['id'] == int(id):
+                trobat = True
+                app = data['apps'][i]
+            i += 1
+
+        # Descàrrega de l'app
+        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], app['file_name'])
+
         response = 1
         return json.dumps(response)
 

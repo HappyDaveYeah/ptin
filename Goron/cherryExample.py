@@ -7,6 +7,8 @@ import requests
 
 apps = {"apps":[{"id":0,"enabled":1},{"id":1,"enabled":0},{"id":3,"enabled":0},{"id":5,"enabled":1}]}
 repIP = "37.187.9.5:7777"
+rep = {}
+processData = []
 
 
 """ Cross-Origin resource sharing """
@@ -15,9 +17,12 @@ def CORS():
     #cherrypy.response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
     #cherrypy.response.headers["Access-Control-Request-Headers"] = "x-requested-with"
 
-processData = []
 
 class Navi(object):
+    @staticmethod
+    def getRep():
+        r = requests.get('http://' + repIP + '/repository/repo.json')
+        rep = r.json()['apps']
 
     def getAppFromRep(self, id=None):
         r = requests.get('http://' + repIP + '/repository/repo.json')
@@ -25,12 +30,12 @@ class Navi(object):
         # Cerca de l'app en el repository obtingut
         i = 0
         trobat = False
-        num_apps = len(data['apps'])
+        num_apps = len(rep)
         app = {}
         while i < num_apps and not trobat:
-            if data['apps'][i]['id'] == int(id):
+            if rep[i]['id'] == int(id):
                 trobat = True
-                app = data['apps'][i]
+                app = rep[i]
             i += 1
         return app
 
@@ -96,6 +101,8 @@ class Navi(object):
         else:return('')
 
 
+Navi.getRep()
+print rep
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})
 cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)
 cherrypy.quickstart(Navi())

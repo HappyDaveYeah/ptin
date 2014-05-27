@@ -19,12 +19,9 @@ processData = []
 
 class Navi(object):
 
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def ADD(self, id=None):
+    def getAppFromRep(self, id=None):
         r = requests.get('http://' + repIP + '/repository/repo.json')
         data = r.json()
-
         # Cerca de l'app en el repository obtingut
         i = 0
         trobat = False
@@ -35,9 +32,15 @@ class Navi(object):
                 trobat = True
                 app = data['apps'][i]
             i += 1
+        return app
 
-        # Descàrrega de l'app
-        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def ADD(self, id=None):
+        app = self.getAppFromRep(id)
+
+        # Descarrega de lapp
+        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], app['file_name'])
 
         response = 1
         return json.dumps(response)
@@ -75,7 +78,7 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def getRep(self):
+    def getApps(self):
         return json.dumps(apps)
 
 

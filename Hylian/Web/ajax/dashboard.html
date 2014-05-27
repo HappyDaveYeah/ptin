@@ -29,7 +29,7 @@
         var appsRep = [];
         $.getJSON( "http://" + repIP + "/repository/repo.json", function(data) {
             $.ajax({
-                url: "http://" + naviIP + "/getRep",
+                url: "http://" + naviIP + "/getApps",
                 async: false,
                 dataType: "json",
                 success: function (json_data) {

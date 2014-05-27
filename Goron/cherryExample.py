@@ -37,7 +37,7 @@ class Navi(object):
             i += 1
 
         # Descàrrega de l'app
-        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], app['file_name'])
+        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
 
         response = 1
         return json.dumps(response)

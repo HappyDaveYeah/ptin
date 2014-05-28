@@ -7,67 +7,60 @@
 	</div>
 </div>
 <!--End Breadcrumb-->
-<!--Start Logging-->
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-file-text-o fa-fw"></i> Logging Panel
-            </div>
-            <!-- /.panel-heading -->
-            <div class="panel-body">
+<!--Start Logging-->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-file-text-o fa-fw"></i> Logging Panel
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <ul class="nav nav-pills">
+            <li class="active"><a href="#all-pills" data-toggle="tab">All</a>
+            </li>
+            <li class=""><a href="#info-pills" data-toggle="tab"><i class="fa fa-info fa-fw"></i> Info</a>
+            </li>
+            <li class=""><a href="#warning-pills" data-toggle="tab"><i class="fa fa-warning fa-fw"></i> Warning</a>
+            </li>
+            <li class=""><a href="#error-pills" data-toggle="tab"><i class="fa fa-bolt fa-fw"></i> Error</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="all-pills" class="tab-pane fade active in">
                 <div class="list-group">
                     <a href="#" class="list-group-item">
-                        <i class="fa fa-comment fa-fw"></i> New Comment
-                        <span class="pull-right text-muted small"><em>4 minutes ago</em>
-                        </span>
-                    </a>
-                    <a href="#" class="list-group-item">
-                        <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                        <span class="pull-right text-muted small"><em>12 minutes ago</em>
-                        </span>
-                    </a>
-                    <a href="#" class="list-group-item">
-                        <i class="fa fa-envelope fa-fw"></i> Message Sent
-                        <span class="pull-right text-muted small"><em>27 minutes ago</em>
-                        </span>
-                    </a>
-                    <a href="#" class="list-group-item">
-                        <i class="fa fa-tasks fa-fw"></i> New Task
+                        New Task
                         <span class="pull-right text-muted small"><em>43 minutes ago</em>
                         </span>
                     </a>
                     <a href="#" class="list-group-item">
-                        <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                        Server Rebooted
                         <span class="pull-right text-muted small"><em>11:32 AM</em>
                         </span>
                     </a>
                     <a href="#" class="list-group-item">
-                        <i class="fa fa-bolt fa-fw"></i> Server Crashed!
+                        Server Crashed!
                         <span class="pull-right text-muted small"><em>11:13 AM</em>
                         </span>
                     </a>
                     <a href="#" class="list-group-item">
-                        <i class="fa fa-warning fa-fw"></i> Server Not Responding
+                        Server Not Responding
                         <span class="pull-right text-muted small"><em>10:57 AM</em>
                         </span>
                     </a>
-                    <a href="#" class="list-group-item">
-                        <i class="fa fa-shopping-cart fa-fw"></i> New Order Placed
-                        <span class="pull-right text-muted small"><em>9:49 AM</em>
-                        </span>
-                    </a>
-                    <a href="#" class="list-group-item">
-                        <i class="fa fa-money fa-fw"></i> Payment Received
-                        <span class="pull-right text-muted small"><em>Yesterday</em>
-                        </span>
-                    </a>
                 </div>
-                <!-- /.list-group -->
-                <a href="#" class="btn btn-default btn-block">View All Alerts</a>
             </div>
-            <!-- /.panel-body -->
+            <div id="info-pills" class="tab-pane fade"></div>
+            <div id="warning-pills" class="tab-pane fade"></div>
+            <div id="error-pills" class="tab-pane fade"></div>
         </div>
-        <!-- /.panel -->
+        <!-- /.list-group -->
+        <button type="button" class="btn btn-primary btn-label-left"><span><i class="fa fa-history"></i></span>Clear</button>
+        <button type="button" class="btn btn-primary btn-label-left"><span><i class="fa fa-cloud-download"></i></span>Download</button>
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
 
 
 <!--End Logging -->

@@ -2378,3 +2378,8 @@ td.beauty-hover {
   height: 65px;
   padding: 0;
 }
+
+.tab-content {
+    max-height: 450px;
+    overflow:auto;
+}

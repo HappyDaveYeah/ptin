@@ -60,7 +60,7 @@
                                         '<h4 class="page-header text-right"><i class="fa fa-linux"></i>' + val.name + '</h4>' +
                                         '<div class="row ow-server-bottom">' +
                                             '<div class="col-sm-4 text-center">' +
-                                                '<img src="img/' + val.icon + '" class="img-rounded app">' +
+                                                '<img src="http://' + repIP + '/repository/' + val.dir + '/' + val.icon + '" class="img-rounded app">' +
                                             '</div>' +
                                             '<div class="col-sm-8">' +
                                                 '<div class="row"><i class="fa fa-lock"></i> ' + val.cat + '</div>' +
@@ -123,6 +123,7 @@
                     $("#enable[value='" + $(this).val() + "']").prop('disabled', false);
                 }
                 else {
+                    appOperation("DEL", $(this).val());
                     $("#enable[value='" + $(this).val() + "']").prop('checked', false);
                     $("#enable[value='" + $(this).val() + "']").prop('disabled', true);
                 }

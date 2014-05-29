@@ -26,7 +26,6 @@ class Navi(object):
 
     """ Cerca de l'app en el repository obtingut """
     def getAppFromRep(self, id=None):
-        #
         i = 0
         trobat = False
         num_apps = len(repository)

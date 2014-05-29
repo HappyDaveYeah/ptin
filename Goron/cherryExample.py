@@ -98,6 +98,15 @@ class Navi(object):
             return('GOES')
         else:return('')
 
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def getAllLog(self):
+        return("getAllLog")
+
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def getLog(self, timestamp=None):
+        return("timestamp")
 
 Navi.getRep()
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})

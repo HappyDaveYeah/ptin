@@ -105,7 +105,7 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getLog(self, timestamp=None):
-        return("timestamp")
+        return json.dumps({"success": True, "payload": timestamp})
 
 Navi.getRep()
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})

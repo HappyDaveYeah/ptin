@@ -109,6 +109,18 @@
 <div style="height: 40px;"></div>
 
 <script type="text/javascript">
+(function poll(){
+    setTimeout(function() {
+        $.ajax({
+            url: "http://localhost:8080/START/1",
+            dataType: "json",
+            success: function(data){
+                var resp = jQuery.parseJSON(data);
+                console.log(resp.success);
 
-
+            },
+            complete: poll
+        });
+    }, 5000);
+})();
 </script>

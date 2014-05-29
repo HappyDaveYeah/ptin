@@ -112,7 +112,7 @@
 (function poll(){
     setTimeout(function() {
         $.ajax({
-            url: "http://localhost:8080/START/1",
+            url: "http://localhost:8080/getLog/" + $.now(),
             dataType: "json",
             success: function(data){
                 var resp = jQuery.parseJSON(data);
@@ -121,6 +121,7 @@
             },
             complete: poll
         });
-    }, 5000);
+    }, 15000);
 })();
+console.log($.now());
 </script>

@@ -53,7 +53,8 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def DEL(self, id=None):
-        response = call('rm apps/'+id, shell=True)
+        app = self.getAppFromRep(id)
+        response = call('rm apps/'+app['file_name'], shell=True)
         return json.dumps({"success": response})
 
     @cherrypy.expose

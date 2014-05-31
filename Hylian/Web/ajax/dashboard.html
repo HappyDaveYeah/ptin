@@ -138,7 +138,7 @@
                 dataType: "json",
                 success: function (json_data) {
                     var resp = jQuery.parseJSON(json_data);
-                    console.log("Resp -> " + resp);
+                    console.log("Success: " + resp.success);
                 },
                 error: function (e) {
                     alert('Error Operation App: ' + e);

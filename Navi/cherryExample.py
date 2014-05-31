@@ -100,6 +100,7 @@ class Navi(object):
         # Obtenir log
         json_log = open('log/navi.log')
         log = json.load(json_log)
+        json_log.close()
 
         # TODO: filtar els logs i enviar els logs > timestamp
 

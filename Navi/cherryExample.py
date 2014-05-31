@@ -35,8 +35,8 @@ class Navi(object):
         # Descarrega de lapp
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
 
-        response = 1
-        return json.dumps(response)
+        response = True
+        return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
@@ -54,19 +54,19 @@ class Navi(object):
     @cherrypy.tools.json_out()
     def DEL(self, id=None):
         response = call('rm apps/'+id, shell=True)
-        return json.dumps(response)
+        return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def START(self, id=None):
         response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
-        return json.dumps(response)
+        return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def STOP(self, id=None):
         response = call('docker stop ' + id)
-        return json.dumps(response)
+        return json.dumps({"success": response})
 
 
     @cherrypy.expose

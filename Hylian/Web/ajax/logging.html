@@ -109,15 +109,17 @@
 <div style="height: 40px;"></div>
 
 <script type="text/javascript">
+var timestamp = $.now();
 (function poll(){
         setTimeout(function() {
             if (location.hash.replace(/^#/, '') == 'ajax/logging.html'){
                 $.ajax({
-                    url: "http://localhost:8080/getLog/" + $.now(),
+                    url: "http://localhost:8080/getLog/" + timestamp,
                     dataType: "json",
                     success: function(data){
                         var resp = jQuery.parseJSON(data);
                         console.log("Success: " + resp.success);
+                        //console.log("Payload: " + resp.payload['logs'][0]['timestamp']);
                     },
                     complete: poll
                 });

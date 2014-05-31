@@ -110,19 +110,18 @@
 
 <script type="text/javascript">
 (function poll(){
-    if (location.hash.replace(/^#/, '') == 'ajax/logging.html'){
         setTimeout(function() {
-            $.ajax({
-                url: "http://localhost:8080/getLog/" + $.now(),
-                dataType: "json",
-                success: function(data){
-                    var resp = jQuery.parseJSON(data);
-                    console.log(resp.success);
-                },
-                complete: poll
-            });
+            if (location.hash.replace(/^#/, '') == 'ajax/logging.html'){
+                $.ajax({
+                    url: "http://localhost:8080/getLog/" + $.now(),
+                    dataType: "json",
+                    success: function(data){
+                        var resp = jQuery.parseJSON(data);
+                        console.log("Success: " + resp.success);
+                    },
+                    complete: poll
+                });
+           }
         }, 5000);
-    }
 })();
-console.log($.now());
 </script>

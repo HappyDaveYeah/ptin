@@ -24,18 +24,9 @@ class Navi(object):
         r = requests.get('http://' + repIP + '/repository/repo.json')
         repository.extend(r.json()['apps'])
 
-    """ Cerca de l'app en el repository obtingut """
+    """ Cerca i retorna l'app en el repository obtingut """
     def getAppFromRep(self, id=None):
-        i = 0
-        trobat = False
-        num_apps = len(repository)
-        app = {}
-        while i < num_apps and not trobat:
-            if repository[i]['id'] == int(id):
-                trobat = True
-                app = repository[i]
-            i += 1
-        return app
+        return next((app for app in repository if app['id'] == int(id)), None)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()

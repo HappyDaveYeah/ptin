@@ -42,7 +42,7 @@ class Navi(object):
     def ADD(self, id=None):
         app = self.getAppFromRep(id)
         # Descarrega de lapp
-        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], app['file_name'])
+        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
 
         response = 1
         return json.dumps(response)

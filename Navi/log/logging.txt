@@ -1,2 +1,14 @@
-2013-02-16 13:16:30 [INFO] Cams - Application Started.
-2013-02-16 13:16:35 [INFO] Cams - Application Stopped.
+{
+  "logs": [
+    {
+      "timestamp": 1401568844.63,
+      "level": 3,
+      "message": "Cams - Application Started."
+    },
+    {
+      "timestamp": 1401568854.63,
+      "level": 3,
+      "message": "Cams - Application Stopped."
+    }
+  ]
+}

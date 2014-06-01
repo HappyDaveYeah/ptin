@@ -127,9 +127,11 @@
 
                 // Recorrer totes les entrades de log rebudes
                 $.each(resp['logs'], function(index, log){
+                    var localDateTime = (new Date((log['timestamp'] * 1000)).toLocaleString());
+
                     var entry = '<a href="#" class="list-group-item">' + log['message'] +
                         '<span class="pull-right text-muted small">' +
-                        '<em>' + log['timestamp'] + '</em></span></a>';
+                        '<em>' + localDateTime + '</em></span></a>';
 
                     // Afegir entrada de log en el tab corresponent al loglevel
                     switch (log['level']) {
@@ -137,16 +139,16 @@
                             $("#debug").prepend(entry);
                             break;
                         */
-                        case 2:
+                        case 20:
                             $("#info").prepend(entry);
                             break;
-                        case 3:
+                        case 30:
                             $("#warning").prepend(entry);
                             break;
-                        case 4:
+                        case 40:
                             $("#error").prepend(entry);
                             break;
-                        case 5:
+                        case 50:
                             $("#critical").prepend(entry);
                             break;
                     }

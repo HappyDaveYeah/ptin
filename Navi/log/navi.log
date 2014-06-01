@@ -1,14 +1,2 @@
-{
-  "logs": [
-    {
-      "timestamp": 1401568844.63,
-      "level": 2,
-      "message": "Cams - Application Started."
-    },
-    {
-      "timestamp": 1401568854.63,
-      "level": 2,
-      "message": "Cams - Application Stopped."
-    }
-  ]
-}
+{"timestamp": 1401568844.63, "levelno": 20, "message": "Starting Factory Application"}
+{"timestamp": 1401568854.63, "levelno": 20, "message": "Stopping Factory Application"}

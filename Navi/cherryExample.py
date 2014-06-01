@@ -1,8 +1,12 @@
+import logging
 import urllib
 import cherrypy
 import json
 from subprocess import call
+from datetime import datetime
+import jsonlogger
 import requests
+import time
 
 apps = {"apps":[{"id":0,"enabled":1},{"id":1,"enabled":0},{"id":3,"enabled":0},{"id":5,"enabled":1}]}
 repIP = "37.187.9.5:7777"
@@ -24,7 +28,7 @@ class Navi(object):
         r = requests.get('http://' + repIP + '/repository/repo.json')
         repository.extend(r.json()['apps'])
 
-    """ Cerca i retorna l'app en el repository obtingut """
+    """ Cerca i retorna lapp en el repository obtingut """
     def getAppFromRep(self, id=None):
         return next((app for app in repository if app['id'] == int(id)), None)
 
@@ -60,7 +64,9 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def START(self, id=None):
+        app = self.getAppFromRep(id)
         response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
+        logger.info("Starting " + app['name'] + " Application", extra={"timestamp": time.time()})
         return json.dumps({"success": response})
 
     @cherrypy.expose
@@ -110,7 +116,18 @@ class Navi(object):
 
         return json.dumps({"success": True, "payload": log})
 
+# Obtneir tots la BBDD de les apps en el repository
 Navi.getRep()
+
+# Setup el Logger
+logger = logging.getLogger("NaviLogger")
+logHandler = logging.FileHandler('log/navi.log')
+formatter = jsonlogger.JsonFormatter('%(timestamp)s %(levelno)s %(message)s')
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)
+logger.setLevel(logging.INFO)
+
+# Start CherryPy
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})
 cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)
 cherrypy.quickstart(Navi())

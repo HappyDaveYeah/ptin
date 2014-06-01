@@ -92,7 +92,11 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getAllLog(self):
-        return("getAllLog")
+	# Obtenir log
+        json_log = open('log/navi.log')
+        log = json.load(json_log)
+        json_log.close()
+	return json.dumps(log)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()

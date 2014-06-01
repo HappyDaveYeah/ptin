@@ -1,0 +1,1 @@
+directori on estaran les apps instalades

@@ -24,11 +24,13 @@
             </li>
             <li class=""><a href="#error-pills" data-toggle="tab"><i class="fa fa-bolt fa-fw"></i> Error</a>
             </li>
+            <li class=""><a href="#critical-pills" data-toggle="tab"><i class="fa fa-bomb fa-fw"></i> Critical</a>
+            </li>
         </ul>
         <div class="tab-content">
             <div id="all-pills" class="tab-pane fade active in">
                 <div style="height: 15px;"></div>
-                <div class="list-group">
+                <div id="all" class="list-group">
                     <a href="#" class="list-group-item">
                         New Task
                         <span class="pull-right text-muted small"><em>43 minutes ago</em>
@@ -91,9 +93,10 @@
                     </a>
                 </div>
             </div>
-            <div id="info-pills" class="tab-pane fade"></div>
-            <div id="warning-pills" class="tab-pane fade"></div>
-            <div id="error-pills" class="tab-pane fade"></div>
+            <div id="info-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="info" class="list-group"></div></div>
+            <div id="warning-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="warning" class="list-group"></div></div>
+            <div id="error-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="error" class="list-group"></div></div>
+            <div id="critical-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="critical" class="list-group"></div></div>
         </div>
         <div style="height: 15px;"></div>
         <!-- /.list-group -->
@@ -109,21 +112,67 @@
 <div style="height: 40px;"></div>
 
 <script type="text/javascript">
-var timestamp = $.now();
-(function poll(){
-        setTimeout(function() {
-            if (location.hash.replace(/^#/, '') == 'ajax/logging.html'){
-                $.ajax({
-                    url: "http://localhost:8080/getLog/" + timestamp,
-                    dataType: "json",
-                    success: function(data){
-                        var resp = jQuery.parseJSON(data);
-                        console.log("Success: " + resp.success);
-                        //console.log("Payload: " + resp.payload['logs'][0]['timestamp']);
-                    },
-                    complete: poll
+    //LogLevels
+    var loglevel = {  "5": "CRITICAL",  "4": "ERROR",  "3": "WARNING",  "2": "INFO",  "1": "DEBUG"  };
+
+    //IP del Navi
+    var naviIP = "localhost:8080";
+
+    $(document).ready(function() {
+        $.ajax({
+            url: "http://" + naviIP + "/getAllLog",
+            dataType: "json",
+            success: function(data){
+                var resp = jQuery.parseJSON(data);
+
+                // Recorrer totes les entrades de log rebudes
+                $.each(resp['logs'], function(index, log){
+                    var entry = '<a href="#" class="list-group-item">' + log['message'] +
+                        '<span class="pull-right text-muted small">' +
+                        '<em>' + log['timestamp'] + '</em></span></a>';
+
+                    // Afegir entrada de log en el tab corresponent al loglevel
+                    switch (log['level']) {
+                        /*case 1:
+                            $("#debug").prepend(entry);
+                            break;
+                        */
+                        case 2:
+                            $("#info").prepend(entry);
+                            break;
+                        case 3:
+                            $("#warning").prepend(entry);
+                            break;
+                        case 4:
+                            $("#error").prepend(entry);
+                            break;
+                        case 5:
+                            $("#critical").prepend(entry);
+                            break;
+                    }
+                    $("#all").prepend(entry);
                 });
-           }
-        }, 5000);
-})();
+            }
+        });
+
+
+    var timestamp = $.now();
+/*
+    (function poll(){
+            setTimeout(function() {
+                if (location.hash.replace(/^#/, '') == 'ajax/logging.html'){
+                    $.ajax({
+                        url: "http://localhost:8080/getLog/" + timestamp,
+                        dataType: "json",
+                        success: function(data){
+                            var resp = jQuery.parseJSON(data);
+                            console.log("Success: " + resp.success);
+                            //console.log("Payload: " + resp.payload['logs'][0]['timestamp']);
+                        },
+                        complete: poll
+                    });
+               }
+            }, 5000);
+    })();*/
+});
 </script>

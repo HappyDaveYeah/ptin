@@ -2,12 +2,12 @@
   "logs": [
     {
       "timestamp": 1401568844.63,
-      "level": 3,
+      "level": 2,
       "message": "Cams - Application Started."
     },
     {
       "timestamp": 1401568854.63,
-      "level": 3,
+      "level": 2,
       "message": "Cams - Application Stopped."
     }
   ]

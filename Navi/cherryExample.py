@@ -66,7 +66,7 @@ class Navi(object):
     def START(self, id=None):
         app = self.getAppFromRep(id)
         response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
-        logger.info("Starting " + app['name'] + " Application", extra={"timestamp": time.time()})
+        logger.info(app['name'] + "- Application Started", extra={"timestamp": time.time()})
         return json.dumps({"success": response})
 
     @cherrypy.expose
@@ -98,23 +98,31 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getAllLog(self):
-    # Obtenir log
-        json_log = open('log/navi.log')
-        log = json.load(json_log)
-        json_log.close()
-        return json.dumps(log)
+        # Obtenir logs
+        logs = []
+        with open('log/navi.log') as logfile:
+           for line in logfile:
+               logs.append(json.loads(line))
+        logfile.close()
+
+        return json.dumps(logs)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getLog(self, timestamp=None):
         # Obtenir log
-        json_log = open('log/navi.log')
-        log = json.load(json_log)
-        json_log.close()
+        pass
+        #json_log = open('log/navi.log')
+        #log = json.load(json_log)
+        #with open('log/navi.log') as logfile:
+        #    for line in logfile:
+        #        print "HOLA"
+        #        logs.append(json.loads(line))
+        #json_log.close()
 
         # TODO: filtar els logs i enviar els logs > timestamp
 
-        return json.dumps({"success": True, "payload": log})
+        #return json.dumps({"success": True, "payload": logs})
 
 # Obtneir tots la BBDD de les apps en el repository
 Navi.getRep()

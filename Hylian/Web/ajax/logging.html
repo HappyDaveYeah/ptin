@@ -126,7 +126,7 @@
                 var resp = jQuery.parseJSON(data);
 
                 // Recorrer totes les entrades de log rebudes
-                $.each(resp['logs'], function(index, log){
+                $.each(resp, function(index, log){
                     var localDateTime = (new Date((log['timestamp'] * 1000)).toLocaleString());
 
                     var entry = '<a href="#" class="list-group-item">' + log['message'] +
@@ -134,7 +134,7 @@
                         '<em>' + localDateTime + '</em></span></a>';
 
                     // Afegir entrada de log en el tab corresponent al loglevel
-                    switch (log['level']) {
+                    switch (log['levelno']) {
                         /*case 1:
                             $("#debug").prepend(entry);
                             break;

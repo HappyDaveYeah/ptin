@@ -1,2 +1,4 @@
-{"timestamp": 1401568844.63, "levelno": 20, "message": "Starting Factory Application"}
-{"timestamp": 1401568854.63, "levelno": 20, "message": "Stopping Factory Application"}
+{"timestamp": 1401568844.63, "levelno": 20, "message": "Factory - Application Started"}
+{"timestamp": 1401568854.63, "levelno": 20, "message": "Factory - Application Stopped"}
+{"timestamp": 1401641019.337, "levelno": 20, "message": "Factory- Application Started"}
+{"timestamp": 1401641020.878, "levelno": 20, "message": "Lightning- Application Started"}

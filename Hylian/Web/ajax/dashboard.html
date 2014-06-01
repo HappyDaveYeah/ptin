@@ -106,7 +106,7 @@
 
 
 
-        $(document).on('click', 'input[type=checkbox]', function(){
+        $(document).off('click', 'input[type=checkbox]').on('click', 'input[type=checkbox]', function(){
             if(this.id == "enable") {
                 if($(this).is(':checked')){
                     appOperation("START", $(this).val());

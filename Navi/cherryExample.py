@@ -1,8 +1,12 @@
+import logging
 import urllib
 import cherrypy
 import json
 from subprocess import call
+from datetime import datetime
+import jsonlogger
 import requests
+import time
 
 apps = {"apps":[{"id":0,"enabled":1},{"id":1,"enabled":0},{"id":3,"enabled":0},{"id":5,"enabled":1}]}
 repIP = "37.187.9.5:7777"
@@ -24,28 +28,19 @@ class Navi(object):
         r = requests.get('http://' + repIP + '/repository/repo.json')
         repository.extend(r.json()['apps'])
 
-    """ Cerca de l'app en el repository obtingut """
+    """ Cerca i retorna lapp en el repository obtingut """
     def getAppFromRep(self, id=None):
-        i = 0
-        trobat = False
-        num_apps = len(repository)
-        app = {}
-        while i < num_apps and not trobat:
-            if repository[i]['id'] == int(id):
-                trobat = True
-                app = repository[i]
-            i += 1
-        return app
+        return next((app for app in repository if app['id'] == int(id)), None)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def ADD(self, id=None):
         app = self.getAppFromRep(id)
         # Descarrega de lapp
-        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], app['file_name'])
-
-        response = 1
-        return json.dumps(response)
+        urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
+        logger.info(app['name'] + " - Application Installed", extra={"timestamp": time.time()})
+        response = True
+        return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
@@ -62,20 +57,25 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def DEL(self, id=None):
-        response = call('rm apps/'+id, shell=True)
-        return json.dumps(response)
+        app = self.getAppFromRep(id)
+        response = call('rm apps/'+app['file_name'], shell=True)
+        logger.info(app['name'] + " - Application Removed", extra={"timestamp": time.time()})
+        response = True
+        return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def START(self, id=None):
+        app = self.getAppFromRep(id)
         response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
-        return json.dumps(response)
+        logger.info(app['name'] + " - Application Started", extra={"timestamp": time.time()})
+        return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def STOP(self, id=None):
-        response = call('docker stop ' + id)
-        return json.dumps(response)
+        response = call('docker stop ' + 'apps/' + id)
+        return json.dumps({"success": response})
 
 
     @cherrypy.expose
@@ -100,14 +100,44 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getAllLog(self):
-        return("getAllLog")
+        # Obtenir logs
+        logs = []
+        with open('log/navi.log') as logfile:
+           for line in logfile:
+               logs.append(json.loads(line))
+        logfile.close()
+
+        return json.dumps(logs)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getLog(self, timestamp=None):
-        return json.dumps({"success": True, "payload": timestamp})
+        # Obtenir log
+        pass
+        #json_log = open('log/navi.log')
+        #log = json.load(json_log)
+        #with open('log/navi.log') as logfile:
+        #    for line in logfile:
+        #        print "HOLA"
+        #        logs.append(json.loads(line))
+        #json_log.close()
 
+        # TODO: filtar els logs i enviar els logs > timestamp
+
+        #return json.dumps({"success": True, "payload": logs})
+
+# Obtneir tots la BBDD de les apps en el repository
 Navi.getRep()
+
+# Setup el Logger
+logger = logging.getLogger("NaviLogger")
+logHandler = logging.FileHandler('log/navi.log')
+formatter = jsonlogger.JsonFormatter('%(timestamp)s %(levelno)s %(message)s')
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)
+logger.setLevel(logging.INFO)
+
+# Start CherryPy
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})
 cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)
 cherrypy.quickstart(Navi())

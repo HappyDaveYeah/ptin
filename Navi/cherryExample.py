@@ -34,7 +34,7 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def ADD(self, id=None):
+    def install(self, id=None):
         app = self.getAppFromRep(id)
         # Descarrega de lapp
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
@@ -56,7 +56,7 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def DEL(self, id=None):
+    def remove(self, id=None):
         app = self.getAppFromRep(id)
         response = call('rm apps/'+app['file_name'], shell=True)
         logger.info(app['name'] + " - Application Removed", extra={"timestamp": time.time()})
@@ -65,7 +65,7 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def START(self, id=None):
+    def start(self, id=None):
         app = self.getAppFromRep(id)
         response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
         logger.info(app['name'] + " - Application Started", extra={"timestamp": time.time()})
@@ -73,7 +73,7 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def STOP(self, id=None):
+    def stop(self, id=None):
         response = call('docker stop ' + 'apps/' + id)
         return json.dumps({"success": response})
 

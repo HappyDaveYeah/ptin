@@ -1,10 +1,8 @@
-import logging
 import urllib
 import cherrypy
 import json
 from subprocess import call
 from datetime import datetime
-import jsonlogger
 import requests
 import time
 
@@ -38,7 +36,6 @@ class Navi(object):
         app = self.getAppFromRep(id)
         # Descarrega de lapp
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
-        logger.info(app['name'] + " - Application Installed", extra={"timestamp": time.time()})
         response = True
         return json.dumps({"success": response})
 
@@ -59,7 +56,6 @@ class Navi(object):
     def remove(self, id=None):
         app = self.getAppFromRep(id)
         response = call('rm apps/'+app['file_name'], shell=True)
-        logger.info(app['name'] + " - Application Removed", extra={"timestamp": time.time()})
         response = True
         return json.dumps({"success": response})
 
@@ -68,7 +64,6 @@ class Navi(object):
     def start(self, id=None):
         app = self.getAppFromRep(id)
         response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
-        logger.info(app['name'] + " - Application Started", extra={"timestamp": time.time()})
         return json.dumps({"success": response})
 
     @cherrypy.expose
@@ -77,12 +72,10 @@ class Navi(object):
         response = call('docker stop ' + 'apps/' + id)
         return json.dumps({"success": response})
 
-
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getApps(self):
         return json.dumps(apps)
-
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
@@ -97,45 +90,9 @@ class Navi(object):
             return('GOES')
         else:return('')
 
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def getAllLog(self):
-        # Obtenir logs
-        logs = []
-        with open('log/navi.log') as logfile:
-           for line in logfile:
-               logs.append(json.loads(line))
-        logfile.close()
-
-        return json.dumps(logs)
-
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def getLog(self, timestamp=None):
-        # Obtenir log
-        pass
-        #json_log = open('log/navi.log')
-        #log = json.load(json_log)
-        #with open('log/navi.log') as logfile:
-        #    for line in logfile:
-        #        print "HOLA"
-        #        logs.append(json.loads(line))
-        #json_log.close()
-
-        # TODO: filtar els logs i enviar els logs > timestamp
-
-        #return json.dumps({"success": True, "payload": logs})
 
 # Obtneir tots la BBDD de les apps en el repository
 Navi.getRep()
-
-# Setup el Logger
-logger = logging.getLogger("NaviLogger")
-logHandler = logging.FileHandler('log/navi.log')
-formatter = jsonlogger.JsonFormatter('%(timestamp)s %(levelno)s %(message)s')
-logHandler.setFormatter(formatter)
-logger.addHandler(logHandler)
-logger.setLevel(logging.INFO)
 
 # Start CherryPy
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})

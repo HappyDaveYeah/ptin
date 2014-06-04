@@ -35,8 +35,12 @@ class Navi(object):
     def install(self, id=None):
         app = self.getAppFromRep(id)
         # Descarrega de lapp
+        call('mkdir app/' + app['file_name'], shell=True)
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
         response = True
+        file = open('Dockerfile', 'w')
+        file.write('FROM ubuntu\n'
+                   'ADD ')
         return json.dumps({"success": response})
 
     @cherrypy.expose

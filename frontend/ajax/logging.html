@@ -1,0 +1,113 @@
+<!--Start Breadcrumb-->
+<div class="row">
+	<div id="breadcrumb" class="col-xs-12">
+		<ol class="breadcrumb">
+			<li><a href="index.html">Logging</a></li>
+		</ol>
+	</div>
+</div>
+<!--End Breadcrumb-->
+
+<!--Start Logging-->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-file-text-o fa-fw"></i> Logging Panel
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <ul class="nav nav-pills">
+            <li class="active"><a href="#all-pills" data-toggle="tab">All</a>
+            </li>
+            <li class=""><a href="#info-pills" data-toggle="tab"><i class="fa fa-info fa-fw"></i> Info</a>
+            </li>
+            <li class=""><a href="#warning-pills" data-toggle="tab"><i class="fa fa-warning fa-fw"></i> Warning</a>
+            </li>
+            <li class=""><a href="#error-pills" data-toggle="tab"><i class="fa fa-bolt fa-fw"></i> Error</a>
+            </li>
+            <li class=""><a href="#critical-pills" data-toggle="tab"><i class="fa fa-bomb fa-fw"></i> Critical</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="all-pills" class="tab-pane fade active in"><div style="height: 15px;"></div><div id="all" class="list-group"></div></div>
+            <div id="info-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="info" class="list-group"></div></div>
+            <div id="warning-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="warning" class="list-group"></div></div>
+            <div id="error-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="error" class="list-group"></div></div>
+            <div id="critical-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="critical" class="list-group"></div></div>
+        </div>
+        <div style="height: 15px;"></div>
+        <!-- /.list-group -->
+        <button type="button" class="btn btn-primary btn-label-left"><span><i class="fa fa-history"></i></span>Clear</button>
+        <button type="button" class="btn btn-primary btn-label-left"><span><i class="fa fa-cloud-download"></i></span>Download</button>
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+
+
+<!--End Logging -->
+<div style="height: 40px;"></div>
+
+<script type="text/javascript">
+    //IP del Navi
+    var naviIP = "10.88.99.62:8080";
+
+    $(document).ready(function() {
+        $.ajax({
+            url: "http://" + naviIP + "/getAllLog",
+            dataType: "json",
+            success: function(data){
+                var resp = jQuery.parseJSON(data);
+
+                // Recorrer totes les entrades de log rebudes
+                $.each(resp, function(index, log){
+                    var localDateTime = (new Date((log['timestamp'] * 1000)).toLocaleString());
+
+                    var entry = '<a href="#" class="list-group-item">' + log['message'] +
+                        '<span class="pull-right text-muted small">' +
+                        '<em>' + localDateTime + '</em></span></a>';
+
+                    // Afegir entrada de log en el tab corresponent al loglevel
+                    switch (log['levelno']) {
+                        /*case 1:
+                            $("#debug").prepend(entry);
+                            break;
+                        */
+                        case 20:
+                            $("#info").prepend(entry);
+                            break;
+                        case 30:
+                            $("#warning").prepend(entry);
+                            break;
+                        case 40:
+                            $("#error").prepend(entry);
+                            break;
+                        case 50:
+                            $("#critical").prepend(entry);
+                            break;
+                    }
+                    $("#all").prepend(entry);
+                });
+            }
+        });
+
+
+    var timestamp = $.now();
+/*
+    (function poll(){
+            setTimeout(function() {
+                if (location.hash.replace(/^#/, '') == 'ajax/logging.html'){
+                    $.ajax({
+                        url: "http://localhost:8080/getLog/" + timestamp,
+                        dataType: "json",
+                        success: function(data){
+                            var resp = jQuery.parseJSON(data);
+                            console.log("Success: " + resp.success);
+                            //console.log("Payload: " + resp.payload['logs'][0]['timestamp']);
+                        },
+                        complete: poll
+                    });
+               }
+            }, 5000);
+    })();*/
+});
+</script>

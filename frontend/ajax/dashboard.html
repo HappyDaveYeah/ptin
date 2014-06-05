@@ -2,7 +2,7 @@
 <div class="row">
 	<div id="breadcrumb" class="col-xs-12">
 		<ol class="breadcrumb">
-			<li><a href="index.html">Repository</a></li>
+			<li><a href="../index.html">Repository</a></li>
 		</ol>
 	</div>
 </div>
@@ -22,30 +22,39 @@
 <script type="text/javascript">
     //IP del Navi i del repository
     var naviIP = "localhost:8080";
+    var databaseIP = "37.187.9.5:13370";
     var repIP = "37.187.9.5:7777";
 
     $(document).ready(function() {
         var appsNavi;
         var appsRep = [];
-        $.getJSON( "http://" + repIP + "/repository/repo.json", function(data) {
-            $.ajax({
-                url: "http://" + naviIP + "/getApps",
-                async: false,
-                dataType: "json",
-                success: function (json_data) {
-                    appsNavi = jQuery.parseJSON(json_data);
-                },
-                error: function (e) {
-                    alert('Navi Connection Error: ' + e);
-                }
-			});
+        var appContainer;
 
-            $.each(data, function(key, app) {
-                $.each (app, function (key, val) {
+        $.ajax({
+            url: "http://" + databaseIP + "/app",
+            async: false,
+            dataType: "json",
+            success: function (apps_data) {
+                $.ajax({
+                    url: "http://" + naviIP + "/getApps",
+                    async: false,
+                    dataType: "json",
+                    success: function (json_data) {
+                        appsNavi = jQuery.parseJSON(json_data);
+                    },
+                    error: function (e) {
+                        alert('Navi Connection Error: ' + e);
+                    }
+                });
+
+                console.log(appsNavi);
+                console.log(appsNavi[0].id);
+
+                $.each (apps_data, function (key, val) {
                     var installed = '';
                     var enabled = '';
                     var disabled = '';
-                    var appFound = $.grep(appsNavi.apps, function(app){ return app.id == val.id; });
+                    var appFound = $.grep(appsNavi, function(app){ return app.id == val.id; });
                     if(appFound.length == 1 ){
                         installed = 'checked=""';
                         if(appFound[0].enabled == 1){
@@ -94,14 +103,17 @@
                                     '</div>';
                     appsRep.push(appContainer);
                 });
-            });
 
-            $("<div>", {
-                "id": "dashboard-servers",
-                "class": "row",
-                "style": "visibility: visible; position: relative;",
-                html: appsRep.join("")
-            }).appendTo("#dashboard_tabs");
+                $("<div>", {
+                    "id": "dashboard-servers",
+                    "class": "row",
+                    "style": "visibility: visible; position: relative;",
+                    html: appsRep.join("")
+                }).appendTo("#dashboard_tabs");
+            },
+            error: function (e) {
+                alert('Database Connection Error: ' + e);
+            }
         });
 
 

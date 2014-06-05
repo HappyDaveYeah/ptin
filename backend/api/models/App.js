@@ -9,10 +9,27 @@
 module.exports = {
 
   attributes: {
-  	
-  	/* e.g.
-  	nickname: 'string'
-  	*/
+
+  	name: {
+        type: 'string',
+        required: true
+    },
+    cat: {
+        type: 'string',
+        required: true
+    },
+    icon: {
+        type: 'string',
+        required: true
+    },
+    dir: {
+        type: 'string',
+        required: true
+    },
+    file_name: {
+        type: 'string',
+        required: true
+    }
     
   }
 

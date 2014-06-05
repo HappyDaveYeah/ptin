@@ -6,7 +6,7 @@ from datetime import datetime
 import requests
 import time
 
-apps = {"apps":[{"id":0,"enabled":1},{"id":1,"enabled":0},{"id":3,"enabled":0},{"id":5,"enabled":1}]}
+apps = [{"id":10,"enabled":1},{"id":11,"enabled":0},{"id":13,"enabled":0},{"id":15,"enabled":1}]
 repIP = "37.187.9.5:7777"
 repository = []
 processData = []

@@ -121,21 +121,21 @@
         $(document).off('click', 'input[type=checkbox]').on('click', 'input[type=checkbox]', function(){
             if(this.id == "enable") {
                 if($(this).is(':checked')){
-                    appOperation("START", $(this).val());
+                    appOperation("start", $(this).val());
                     console.log((this.id) + " " + $(this).val() + " checked");
                 }
                 else {
-                    appOperation("STOP", $(this).val());
+                    appOperation("stop", $(this).val());
                     console.log((this.id) + " " + $(this).val() + " unchecked");
                 }
             }
             else if(this.id == "install") {
                 if($(this).is(':checked')){
-                    appOperation("ADD", $(this).val());
+                    appOperation("install", $(this).val());
                     $("#enable[value='" + $(this).val() + "']").prop('disabled', false);
                 }
                 else {
-                    appOperation("DEL", $(this).val());
+                    appOperation("remove", $(this).val());
                     $("#enable[value='" + $(this).val() + "']").prop('checked', false);
                     $("#enable[value='" + $(this).val() + "']").prop('disabled', true);
                 }

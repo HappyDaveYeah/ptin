@@ -44,7 +44,11 @@ class Navi(object):
         app = self.getAppFromRep(id)
         # Descarrega de lapp
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
-        response = True
+
+        # Logging
+        message = ""+ app['name'] +" - Application Installed"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "install", extra)
         return json.dumps({"success": response})
 
     @cherrypy.expose
@@ -63,15 +67,24 @@ class Navi(object):
     @cherrypy.tools.json_out()
     def remove(self, id=None):
         app = self.getAppFromRep(id)
-        response = call('rm apps/'+app['file_name'], shell=True)
-        response = True
+        #response = call('rm apps/'+app['file_name'], shell=True)
+
+        # Logging
+        message = ""+ app['name'] +" - Application Removed"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "remove", extra)
         return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def start(self, id=None):
         app = self.getAppFromRep(id)
-        response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
+        #response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
+
+        # Logging
+        message = ""+ app['name'] +" - Application Started"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "start", extra)
         return json.dumps({"success": response})
 
     @cherrypy.expose

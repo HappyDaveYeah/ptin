@@ -6,8 +6,10 @@ from datetime import datetime
 import requests
 import time
 
+idNavi = 1
 repIP = "37.187.9.5:7777"
-repository = []
+databaseIP = "37.187.9.5:13370"
+appsDB = []
 processData = []
 
 
@@ -21,13 +23,13 @@ def CORS():
 class Navi(object):
     """ Descarrega el repository dapps """
     @staticmethod
-    def getRep():
-        r = requests.get('http://' + repIP + '/repository/repo.json')
-        repository.extend(r.json()['apps'])
+    def getApps():
+        r = requests.get('http://' + databaseIP + '/app')
+        appsDB.extend(r.json())
 
     """ Cerca i retorna lapp en el repository obtingut """
     def getAppFromRep(self, id=None):
-        return next((app for app in repository if app['id'] == int(id)), None)
+        return next((app for app in appsDB if app['id'] == int(id)), None)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
@@ -68,11 +70,12 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def stop(self, id=None):
-        //response = call('docker stop ' + 'apps/' + id)
+        app = self.getAppFromRep(id)
+        #response = call('docker stop ' + 'apps/' + id)
         url = 'http://37.187.9.5:13370/log/logging'
-        payload = {'timestamp': '1401019205.97', 'levelno': '50', 'message': 'Stopping App', 'event': 'restart', 'idNavi': '1'}
+        payload = {'timestamp': ''+ str(time.time()) +'', 'levelno': '20', 'message': ''+ app['name'] +' - Application Stopped', 'event': 'stop', 'idNavi': '1', 'extra': {'idApp':''+ id +''}}
         r = requests.post(url, data=json.dumps(payload))
-        response = True
+        response = r.status_code == requests.codes.ok
         return json.dumps({"success": response})
 
     @cherrypy.expose
@@ -90,7 +93,7 @@ class Navi(object):
 
 
 # Obtneir tots la BBDD de les apps en el repository
-Navi.getRep()
+Navi.getApps()
 
 # Start CherryPy
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})

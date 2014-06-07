@@ -6,7 +6,6 @@ from datetime import datetime
 import requests
 import time
 
-apps = [{"id":10,"enabled":1},{"id":11,"enabled":0},{"id":13,"enabled":0},{"id":15,"enabled":1}]
 repIP = "37.187.9.5:7777"
 repository = []
 processData = []
@@ -71,11 +70,6 @@ class Navi(object):
     def stop(self, id=None):
         response = call('docker stop ' + 'apps/' + id)
         return json.dumps({"success": response})
-
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def getApps(self):
-        return json.dumps(apps)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()

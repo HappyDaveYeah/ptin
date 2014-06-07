@@ -7,78 +7,46 @@
 	</div>
 </div>
 <!--End Breadcrumb-->
-<!--Start Dashboard 2-->
+<!--Start Dashboard-->
 <div class="row-fluid">
-	<div id="dashboard_tabs" class="col-xs-12 col-sm-10 col-md-12">
-		<!--Start Dashboard Tab 4-->
-
-		<!--End Dashboard Tab 4-->
-	</div>
+	<div id="dashboard_tabs" class="col-xs-12 col-sm-10 col-md-12"></div>
 	<div class="clearfix"></div>
 </div>
-<!--End Dashboard 2 -->
+<!--End Dashboard-->
 <div style="height: 40px;"></div>
 
 <script type="text/javascript">
     //IP del Navi i del repository
     var naviIP = "localhost:8080";
-    var databaseIP = "37.187.9.5:13370";
     var repIP = "37.187.9.5:7777";
+    var databaseIP = "37.187.9.5:13370";
+    var naviID = "1";
 
     $(document).ready(function() {
-        var appsNavi;
         var appsRep = [];
         var appContainer;
-
+        $(".preloader").show();
         $.ajax({
             url: "http://" + databaseIP + "/app",
             async: false,
             dataType: "json",
             success: function (apps_data) {
-                $.ajax({
-                    url: "http://" + naviIP + "/getApps",
-                    async: false,
-                    dataType: "json",
-                    success: function (json_data) {
-                        appsNavi = jQuery.parseJSON(json_data);
-                    },
-                    error: function (e) {
-                        alert('Navi Connection Error: ' + e);
-                    }
-                });
-
-                console.log(appsNavi);
-                console.log(appsNavi[0].id);
-
-                $.each (apps_data, function (key, val) {
-                    var installed = '';
-                    var enabled = '';
-                    var disabled = '';
-                    var appFound = $.grep(appsNavi, function(app){ return app.id == val.id; });
-                    if(appFound.length == 1 ){
-                        installed = 'checked=""';
-                        if(appFound[0].enabled == 1){
-                            enabled = 'checked=""';
-                        }
-                    }
-                    else {
-                        disabled = 'disabled = "true"'
-                    }
-
+                // Generar HTML per a totes les apps disponibles a la DB
+                $.each (apps_data, function (key, app) {
                     appContainer = '<div class="col-xs-12 col-sm-6 col-md-4 ow-server">' +
-                                        '<h4 class="page-header text-right"><i class="fa fa-linux"></i>' + val.name + '</h4>' +
+                                        '<h4 class="page-header text-right"><i class="fa fa-linux"></i>' + app.name + '</h4>' +
                                         '<div class="row ow-server-bottom">' +
                                             '<div class="col-sm-4 text-center">' +
-                                                '<img src="http://' + repIP + '/repository/' + val.dir + '/' + val.icon + '" class="img-rounded app">' +
+                                                '<img src="http://' + repIP + '/repository/' + app.dir + '/' + app.icon + '" class="img-rounded app">' +
                                             '</div>' +
                                             '<div class="col-sm-8">' +
-                                                '<div class="row"><i class="fa fa-lock"></i> ' + val.cat + '</div>' +
+                                                '<div class="row"><i class="fa fa-lock"></i> ' + app.cat + '</div>' +
                                                 '<div class="row"><i class="fa fa-clock-o"></i> Uptime - 10 days</div>' +
                                                 '<div class="row">' +
                                                     '<div class="col-md-6">' +
                                                         '<div class="toggle-switch toggle-switch-primary">' +
                                                             '<label>' +
-                                                                '<input type="checkbox" ' + installed + '" id="install" value="' + val.id + '"></input>' +
+                                                                '<input type="checkbox" id="install" value="' + app.id + '"></input>' +
                                                                 '<div class="toggle-switch-inner" id="install"></div>' +
                                                                 '<div class="toggle-switch-switch">' +
                                                                     '<i class="fa fa-check"></i>' +
@@ -89,7 +57,7 @@
                                                     '<div class="col-md-6">' +
                                                         '<div class="toggle-switch toggle-switch-primary">' +
                                                             '<label>' +
-                                                                '<input type="checkbox" ' + enabled + '" id="enable" value="' + val.id + '" ' + disabled + '></input>' +
+                                                                '<input type="checkbox" id="enable" value="' + app.id + '" disabled = "true"></input>' +
                                                                 '<div class="toggle-switch-inner" id="enable"></div>' +
                                                                 '<div class="toggle-switch-switch">' +
                                                                     '<i class="fa fa-check"></i>' +
@@ -104,15 +72,40 @@
                     appsRep.push(appContainer);
                 });
 
+                //Afegir tot el HTML de les apps disponibles i ocultar
                 $("<div>", {
                     "id": "dashboard-servers",
                     "class": "row",
                     "style": "visibility: visible; position: relative;",
                     html: appsRep.join("")
-                }).appendTo("#dashboard_tabs");
+                }).appendTo("#dashboard_tabs").hide();
+
+                //Settejar lestat corresponen a cada app del Navi
+                $.ajax({
+                    url: "http://" + databaseIP + "/navi/" + naviID,
+                    async: false,
+                    dataType: "json",
+                    success: function (state_data) {
+                        //Aplicar lestat de les app installed
+                        $.each (state_data['installed'], function (key, app) {
+                            $("#install[value='" + app.id + "']").prop('checked', true);
+                            $("#enable[value='" + app.id + "']").prop('disabled', false);
+                        });
+                        //Aplicar lestat de les app enabled
+                        $.each (state_data['enabled'], function (key, app) {
+                            $("#enable[value='" + app.id + "']").prop('disabled', false);
+                            $("#enable[value='" + app.id + "']").prop('checked', true);
+                        });
+                    },
+                    error: function (e) {
+                        alert('Database Connection State Error: ' + e);
+                    }
+                });
+                $("#dashboard-servers").show();
+                $(".preloader").hide();
             },
             error: function (e) {
-                alert('Database Connection Error: ' + e);
+                alert('Database Connection Apps Error: ' + e);
             }
         });
 

@@ -19,6 +19,13 @@ def CORS():
     #cherrypy.response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
     #cherrypy.response.headers["Access-Control-Request-Headers"] = "x-requested-with"
 
+""" Registra el log en la BD """
+def logDB(timestamp, levelno, message, event, extra):
+    url = 'http://'+ databaseIP +'/log/logging'
+    payload = {'timestamp': timestamp, 'levelno': levelno, 'message': message, 'event': event, 'idNavi': idNavi, 'extra': extra}
+    r = requests.post(url, data=json.dumps(payload))
+    return r.status_code == requests.codes.ok
+
 
 class Navi(object):
     """ Descarrega el repository dapps """
@@ -72,10 +79,11 @@ class Navi(object):
     def stop(self, id=None):
         app = self.getAppFromRep(id)
         #response = call('docker stop ' + 'apps/' + id)
-        url = 'http://37.187.9.5:13370/log/logging'
-        payload = {'timestamp': ''+ str(time.time()) +'', 'levelno': '20', 'message': ''+ app['name'] +' - Application Stopped', 'event': 'stop', 'idNavi': '' + idNavi + '', 'extra': {'idApp':''+ id +''}}
-        r = requests.post(url, data=json.dumps(payload))
-        response = r.status_code == requests.codes.ok
+
+        # Logging
+        message = ""+ app['name'] +" - Application Stopped"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "stop", extra)
         return json.dumps({"success": response})
 
     @cherrypy.expose

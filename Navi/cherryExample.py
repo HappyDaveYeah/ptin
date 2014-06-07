@@ -68,7 +68,11 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def stop(self, id=None):
-        response = call('docker stop ' + 'apps/' + id)
+        //response = call('docker stop ' + 'apps/' + id)
+        url = 'http://37.187.9.5:13370/log/logging'
+        payload = {'timestamp': '1401019205.97', 'levelno': '50', 'message': 'Stopping App', 'event': 'restart', 'idNavi': '1'}
+        r = requests.post(url, data=json.dumps(payload))
+        response = True
         return json.dumps({"success": response})
 
     @cherrypy.expose

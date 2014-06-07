@@ -6,7 +6,7 @@ from datetime import datetime
 import requests
 import time
 
-idNavi = 1
+idNavi = "1"
 repIP = "37.187.9.5:7777"
 databaseIP = "37.187.9.5:13370"
 appsDB = []
@@ -73,7 +73,7 @@ class Navi(object):
         app = self.getAppFromRep(id)
         #response = call('docker stop ' + 'apps/' + id)
         url = 'http://37.187.9.5:13370/log/logging'
-        payload = {'timestamp': ''+ str(time.time()) +'', 'levelno': '20', 'message': ''+ app['name'] +' - Application Stopped', 'event': 'stop', 'idNavi': '1', 'extra': {'idApp':''+ id +''}}
+        payload = {'timestamp': ''+ str(time.time()) +'', 'levelno': '20', 'message': ''+ app['name'] +' - Application Stopped', 'event': 'stop', 'idNavi': '' + idNavi + '', 'extra': {'idApp':''+ id +''}}
         r = requests.post(url, data=json.dumps(payload))
         response = r.status_code == requests.codes.ok
         return json.dumps({"success": response})

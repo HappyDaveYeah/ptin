@@ -11,6 +11,7 @@ repIP = "37.187.9.5:7777"
 databaseIP = "37.187.9.5:13370"
 appsDB = []
 processData = []
+appsLocal = []
 
 
 """ Cross-Origin resource sharing """
@@ -27,6 +28,14 @@ def logDB(timestamp, levelno, message, event, extra):
     return r.status_code == requests.codes.ok
 
 
+def searchLocalById(id):
+    find = False
+    i = 0
+    while (i < len(appsLocal)) and (not find):
+        if appsLocal[i]["id"] == id: find = True
+        i += 1
+    if find: return i
+
 class Navi(object):
     """ Descarrega el repository dapps """
     @staticmethod
@@ -38,6 +47,8 @@ class Navi(object):
     def getAppFromDB(self, id=None):
         return next((app for app in appsDB if app['id'] == int(id)), None)
 
+
+    #--------INSTALL--------
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def install(self, id=None):
@@ -45,18 +56,73 @@ class Navi(object):
         # Descarrega de lapp
         call('mkdir apps/'+id, shell=True)
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + id + '/' + app['file_name'])
-
         #install + creacio imatge de la app (docker)
         file = open('apps/'+id+'/Dockerfile', 'w')
         file.write('FROM pybuntu\n'
                    'ADD ' + app['file_name'] + ' /apps/'+app['file_name'] + '\nRUN echo "Image created"')
         file.close()
         call('docker build -t ' + id + ' /home/navi/Desktop/apps/'+id, shell=True)
-
+        #consistenciaLocal
+        ap = {"id":id, "run":0}
+        appsLocal.append(ap)
         # Logging
         message = ""+ app['name'] +" - Application Installed"
         extra = {'idApp': id }
         response = logDB(str(time.time()), "20", message, "install", extra)
+        return json.dumps({"success": response})
+
+    #--------REMOVE---------
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def remove(self, id=None):
+        #remove docker image + all files related
+        app = self.getAppFromDB(id)
+        call('rm -rf apps/'+id, shell=True)
+        #incloure if esta started, ferli kill
+        call('docker kill '+ id, shell=True)
+        call('docker rm ' + id, shell=True)
+        call('docker rmi ' + id, shell=True)
+        #consistenciaLocal
+        t = searchLocalById(id)
+        appsLocal.pop(t)
+        # Logging
+        message = ""+ app['name'] +" - Application Removed"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "remove", extra)
+        return json.dumps({"success": response})
+
+    #--------START--------
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def start(self, id=None):
+        app = self.getAppFromDB(id)
+        #run del contenidor
+        #ESTE ES EL BUENO call('docker run -d --name ' + id + ' ' + id + 'python ' + app['file_name'], shell=True)
+        call('docker run -d --name ' + id + ' ' + id + 'echo "hello world" >> /apps/test', shell=True)
+        #consistenciaLocal
+        t = searchLocalById(id)
+        appsLocal[t]["run"] = 1
+        # Logging
+        message = ""+ app['name'] +" - Application Started"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "start", extra)
+        return json.dumps({"success": response})
+
+    #--------STOP--------
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def stop(self, id=None):
+        app = self.getAppFromDB(id)
+        #stop i esborrada del contenidor
+        call('docker kill '+ id, shell=True)
+        call('docker rm ' + id, shell=True)
+        #consistenciaLocal
+        t = searchLocalById(id)
+        appsLocal[t]["run"] = 0
+        # Logging
+        message = ""+ app['name'] +" - Application Stopped"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "stop", extra)
         return json.dumps({"success": response})
 
     @cherrypy.expose
@@ -73,58 +139,10 @@ class Navi(object):
         #     out.append(line)
         # return json.dumps(out)
 
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def remove(self, id=None):
-        app = self.getAppFromDB(id)
-        #response = call('rm apps/'+app['file_name'], shell=True)
-
-        # Logging
-        message = ""+ app['name'] +" - Application Removed"
-        extra = {'idApp': id }
-        response = logDB(str(time.time()), "20", message, "remove", extra)
-        return json.dumps({"success": response})
-
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def start(self, id=None):
-        app = self.getAppFromDB(id)
-        #response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
-
-        # Logging
-        message = ""+ app['name'] +" - Application Started"
-        extra = {'idApp': id }
-        response = logDB(str(time.time()), "20", message, "start", extra)
-        return json.dumps({"success": response})
-
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def stop(self, id=None):
-        app = self.getAppFromDB(id)
-        #response = call('docker stop ' + 'apps/' + id)
-
-        # Logging
-        message = ""+ app['name'] +" - Application Stopped"
-        extra = {'idApp': id }
-        response = logDB(str(time.time()), "20", message, "stop", extra)
-        return json.dumps({"success": response})
-
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def inputData(self, id=None, data=None):
-        processData.append(data)
-        print('Data '+ data + ' recieved from ' + id + '.')
-        return json.dumps('OK')
-
-    @cherrypy.expose
-    def doSomething(self):
-        if len(processData) >= 5:
-            return('GOES')
-        else:return('')
-
 
 # Obtneir tots la BBDD de les apps en el repository
 Navi.getApps()
+print appsDB
 
 # Start CherryPy
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})

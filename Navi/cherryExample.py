@@ -45,6 +45,14 @@ class Navi(object):
         # Descarrega de lapp
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
 
+        #install + creacio imatge de la app (docker)
+        call('mkdir apps/'+id, shell=True)
+        file = open('/apps/'+id+'/Dockerfile', 'w')
+        file.write('FROM pybuntu\n'
+                   'ADD '+ app['file_name'] + '/home\nRUN echo "Image created"')
+        file.close()
+        call('docker build -t ' + id + '/home/navi/Desktop')
+
         # Logging
         message = ""+ app['name'] +" - Application Installed"
         extra = {'idApp': id }

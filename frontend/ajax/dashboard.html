@@ -98,14 +98,14 @@
                         });
                     },
                     error: function (e) {
-                        alert('Database Connection State Error: ' + e);
+                        alert('Database Connection State Error.');
                     }
                 });
                 $("#dashboard-servers").show();
                 $(".preloader").hide();
             },
             error: function (e) {
-                alert('Database Connection Apps Error: ' + e);
+                alert('Database Connection App Error.');
             }
         });
 
@@ -146,7 +146,7 @@
                     console.log("Success: " + resp.success);
                 },
                 error: function (e) {
-                    alert('Error Operation App: ' + e);
+                    alert('Error App Operation.');
                 }
             });
         }

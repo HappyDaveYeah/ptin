@@ -11,11 +11,11 @@
 		<link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
 		<link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>
 		<link href="plugins/fancybox/jquery.fancybox.css" rel="stylesheet">
-		<link href="plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
-		<link href="plugins/xcharts/xcharts.min.css" rel="stylesheet">
-		<link href="plugins/select2/select2.css" rel="stylesheet">
-		<link href="css/style.css" rel="stylesheet">
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- <link href="plugins/fullcalendar/fullcalendar.css" rel="stylesheet"> -->
+        <!-- <link href="plugins/xcharts/xcharts.min.css" rel="stylesheet"> -->
+        <!--  <link href="plugins/select2/select2.css" rel="stylesheet"> -->
+        <link href="css/style.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 				<script src="http://getbootstrap.com/docs-assets/js/html5shiv.js"></script>
 				<script src="http://getbootstrap.com/docs-assets/js/respond.min.js"></script>
@@ -62,7 +62,7 @@
 						<i class="fa fa-cog"></i>
 						<span class="hidden-xs">System</span>
 					</a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" id="system">
                         <li><a id="restart" href="#">Restart</a></li>
                         <li><a id="shutdown" href="#">Shutdown</a></li>
                         <li><a id="xxx" href="#">xXx</a></li>
@@ -93,10 +93,32 @@
 <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="plugins/bootstrap/bootstrap.min.js"></script>
-<script src="plugins/justified-gallery/jquery.justifiedgallery.min.js"></script>
-<script src="plugins/tinymce/tinymce.min.js"></script>
-<script src="plugins/tinymce/jquery.tinymce.min.js"></script>
+<!-- <script src="plugins/justified-gallery/jquery.justifiedgallery.min.js"></script> -->
+<!--  <script src="plugins/tinymce/tinymce.min.js"></script> -->
+<!--  <script src="plugins/tinymce/jquery.tinymce.min.js"></script> -->
 <!-- All functions for this theme + document.ready processing -->
 <script src="js/devoops.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("ul#system li a").on('click',function(){
+            var cmd = $(this).attr('id');
+
+        });
+    });
+
+    function cmdOperation(cmd) {
+        $.ajax({
+            url: "http://" + naviIP + "/cmd/" + cmd,
+            dataType: "json",
+            success: function (json_data) {
+                var resp = jQuery.parseJSON(json_data);
+                console.log("Success: " + resp.success);
+            },
+            error: function (e) {
+                alert('Error CMD Operation.');
+            }
+        });
+    }
+</script>
 </body>
 </html>

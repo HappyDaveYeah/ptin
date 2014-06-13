@@ -11,6 +11,7 @@
 		<link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
 		<link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>
 		<link href="plugins/fancybox/jquery.fancybox.css" rel="stylesheet">
+        <link rel="stylesheet" href="plugins/ladda/dist/ladda-themeless.min.css">
         <!-- <link href="plugins/fullcalendar/fullcalendar.css" rel="stylesheet"> -->
         <!-- <link href="plugins/xcharts/xcharts.min.css" rel="stylesheet"> -->
         <!--  <link href="plugins/select2/select2.css" rel="stylesheet"> -->
@@ -87,8 +88,6 @@
 	</div>
 </div>
 
-<button id="warn-me" class="btn">Click to see a warning alert</button>
-
 <!--End Container-->
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!--<script src="http://code.jquery.com/jquery.js"></script>-->
@@ -96,7 +95,8 @@
 <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="plugins/bootstrap/bootstrap.min.js"></script>
-<script src="plugins/jquery-bs-alerts/jquery.bsAlerts.min.js"></script>
+<script src="plugins/ladda/dist/spin.min.js"></script>
+<script src="plugins/ladda/dist/ladda.min.js"></script>
 <!-- <script src="plugins/justified-gallery/jquery.justifiedgallery.min.js"></script> -->
 <!--  <script src="plugins/tinymce/tinymce.min.js"></script> -->
 <!--  <script src="plugins/tinymce/jquery.tinymce.min.js"></script> -->
@@ -117,12 +117,6 @@
             success: function (json_data) {
                 var resp = jQuery.parseJSON(json_data);
                 console.log("Success: " + resp.success);
-                $(document).trigger("add-alerts", [
-                    {
-                        'message': "System Restarted.",
-                        'priority': 'success'
-                    }
-                ]);
             },
             error: function (e) {
                 alert('Error CMD Operation.');

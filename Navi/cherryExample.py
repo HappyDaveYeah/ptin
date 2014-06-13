@@ -61,9 +61,11 @@ class Navi(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def CMD(self, command = None):
-        response = call(command, shell=True)
-        return json.dumps(response)
+    def cmd(self, command = None):
+        # TODO: Case amb la comanda corresponent
+        #response = call(command, shell=True)
+        response = True
+        return json.dumps({"success": response})
         # out = []
         # pipe = os.popen(command)
         # for line in pipe:

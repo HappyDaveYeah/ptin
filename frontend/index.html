@@ -65,7 +65,6 @@
                     <ul class="dropdown-menu" id="system">
                         <li><a id="restart" href="#">Restart</a></li>
                         <li><a id="shutdown" href="#">Shutdown</a></li>
-                        <li><a id="xxx" href="#">xXx</a></li>
                     </ul>
 				</li>
 				<li>
@@ -102,7 +101,7 @@
     $(document).ready(function() {
         $("ul#system li a").on('click',function(){
             var cmd = $(this).attr('id');
-
+            cmdOperation(cmd);
         });
     });
 

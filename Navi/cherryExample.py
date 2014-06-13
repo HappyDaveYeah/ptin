@@ -43,15 +43,15 @@ class Navi(object):
     def install(self, id=None):
         app = self.getAppFromRep(id)
         # Descarrega de lapp
+        call('mkdir apps/'+id, shell=True)
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + id + '/' + app['file_name'])
 
         #install + creacio imatge de la app (docker)
-        call('mkdir apps/'+id, shell=True)
         file = open('apps/'+id+'/Dockerfile', 'w')
         file.write('FROM pybuntu\n'
-                   'ADD '+ app['file_name'] + '/home\nRUN echo "Image created"')
+                   'ADD ' + app['file_name'] + ' /apps/'+app['file_name'] + '\nRUN echo "Image created"')
         file.close()
-        call('docker build -t ' + id + '/home/navi/Desktop')
+        call('docker build -t ' + id + ' /home/navi/Desktop/apps/'+id, shell=True)
 
         # Logging
         message = ""+ app['name'] +" - Application Installed"

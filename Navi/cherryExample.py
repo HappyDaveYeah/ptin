@@ -6,9 +6,10 @@ from datetime import datetime
 import requests
 import time
 
-apps = {"apps":[{"id":0,"enabled":1},{"id":1,"enabled":0},{"id":3,"enabled":0},{"id":5,"enabled":1}]}
+idNavi = "1"
 repIP = "37.187.9.5:7777"
-repository = []
+databaseIP = "37.187.9.5:13370"
+appsDB = []
 processData = []
 
 
@@ -18,29 +19,36 @@ def CORS():
     #cherrypy.response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
     #cherrypy.response.headers["Access-Control-Request-Headers"] = "x-requested-with"
 
+""" Registra el log en la BD """
+def logDB(timestamp, levelno, message, event, extra):
+    url = 'http://'+ databaseIP +'/log/logging'
+    payload = {'timestamp': timestamp, 'levelno': levelno, 'message': message, 'event': event, 'idNavi': idNavi, 'extra': extra}
+    r = requests.post(url, data=json.dumps(payload))
+    return r.status_code == requests.codes.ok
+
 
 class Navi(object):
     """ Descarrega el repository dapps """
     @staticmethod
-    def getRep():
-        r = requests.get('http://' + repIP + '/repository/repo.json')
-        repository.extend(r.json()['apps'])
+    def getApps():
+        r = requests.get('http://' + databaseIP + '/app')
+        appsDB.extend(r.json())
 
     """ Cerca i retorna lapp en el repository obtingut """
     def getAppFromRep(self, id=None):
-        return next((app for app in repository if app['id'] == int(id)), None)
+        return next((app for app in appsDB if app['id'] == int(id)), None)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def install(self, id=None):
         app = self.getAppFromRep(id)
         # Descarrega de lapp
-        call('mkdir app/' + app['file_name'], shell=True)
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + app['file_name'])
-        response = True
-        file = open('Dockerfile', 'w')
-        file.write('FROM ubuntu\n'
-                   'ADD ')
+
+        # Logging
+        message = ""+ app['name'] +" - Application Installed"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "install", extra)
         return json.dumps({"success": response})
 
     @cherrypy.expose
@@ -59,27 +67,37 @@ class Navi(object):
     @cherrypy.tools.json_out()
     def remove(self, id=None):
         app = self.getAppFromRep(id)
-        response = call('rm apps/'+app['file_name'], shell=True)
-        response = True
+        #response = call('rm apps/'+app['file_name'], shell=True)
+
+        # Logging
+        message = ""+ app['name'] +" - Application Removed"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "remove", extra)
         return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def start(self, id=None):
         app = self.getAppFromRep(id)
-        response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
+        #response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
+
+        # Logging
+        message = ""+ app['name'] +" - Application Started"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "start", extra)
         return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def stop(self, id=None):
-        response = call('docker stop ' + 'apps/' + id)
-        return json.dumps({"success": response})
+        app = self.getAppFromRep(id)
+        #response = call('docker stop ' + 'apps/' + id)
 
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    def getApps(self):
-        return json.dumps(apps)
+        # Logging
+        message = ""+ app['name'] +" - Application Stopped"
+        extra = {'idApp': id }
+        response = logDB(str(time.time()), "20", message, "stop", extra)
+        return json.dumps({"success": response})
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
@@ -96,7 +114,7 @@ class Navi(object):
 
 
 # Obtneir tots la BBDD de les apps en el repository
-Navi.getRep()
+Navi.getApps()
 
 # Start CherryPy
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})

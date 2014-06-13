@@ -80,11 +80,15 @@
 			<div class="preloader">
 				<img src="img/devoops_getdata.gif" class="devoops-getdata" alt="preloader"/>
 			</div>
+            <div data-alerts="alerts" data-titles="{'warning': '<em>Warning!</em>'}" data-ids="alert_holder" data-fade="3000"></div>
 			<div id="ajax-content"></div>
 		</div>
 		<!--End Content-->
 	</div>
 </div>
+
+<button id="warn-me" class="btn">Click to see a warning alert</button>
+
 <!--End Container-->
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!--<script src="http://code.jquery.com/jquery.js"></script>-->
@@ -92,6 +96,7 @@
 <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="plugins/bootstrap/bootstrap.min.js"></script>
+<script src="plugins/jquery-bs-alerts/jquery.bsAlerts.min.js"></script>
 <!-- <script src="plugins/justified-gallery/jquery.justifiedgallery.min.js"></script> -->
 <!--  <script src="plugins/tinymce/tinymce.min.js"></script> -->
 <!--  <script src="plugins/tinymce/jquery.tinymce.min.js"></script> -->
@@ -112,6 +117,12 @@
             success: function (json_data) {
                 var resp = jQuery.parseJSON(json_data);
                 console.log("Success: " + resp.success);
+                $(document).trigger("add-alerts", [
+                    {
+                        'message': "System Restarted.",
+                        'priority': 'success'
+                    }
+                ]);
             },
             error: function (e) {
                 alert('Error CMD Operation.');

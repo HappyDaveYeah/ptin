@@ -41,7 +41,7 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def install(self, id=None):
-        app = self.getAppFromDB(id)
+        app = self.getAppFromRep(id)
         # Descarrega de lapp
         call('mkdir apps/'+id, shell=True)
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + id + '/' + app['file_name'])

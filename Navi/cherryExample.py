@@ -35,13 +35,13 @@ class Navi(object):
         appsDB.extend(r.json())
 
     """ Cerca i retorna lapp en el repository obtingut """
-    def getAppFromRep(self, id=None):
+    def getAppFromDB(self, id=None):
         return next((app for app in appsDB if app['id'] == int(id)), None)
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def install(self, id=None):
-        app = self.getAppFromRep(id)
+        app = self.getAppFromDB(id)
         # Descarrega de lapp
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + id + '/' + app['file_name'])
 
@@ -76,7 +76,7 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def remove(self, id=None):
-        app = self.getAppFromRep(id)
+        app = self.getAppFromDB(id)
         #response = call('rm apps/'+app['file_name'], shell=True)
 
         # Logging
@@ -88,7 +88,7 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def start(self, id=None):
-        app = self.getAppFromRep(id)
+        app = self.getAppFromDB(id)
         #response = call('docker run ubuntu ' + 'apps/' + id, shell=True)
 
         # Logging
@@ -100,7 +100,7 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def stop(self, id=None):
-        app = self.getAppFromRep(id)
+        app = self.getAppFromDB(id)
         #response = call('docker stop ' + 'apps/' + id)
 
         # Logging

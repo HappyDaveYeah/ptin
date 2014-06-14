@@ -8,9 +8,7 @@
 </div>
 <!--End Breadcrumb-->
 <!--Start Dashboard-->
-<div class="row-fluid">
-	<div id="dashboard_tabs" class="col-xs-12 col-sm-10 col-md-12"></div>
-	<div class="clearfix"></div>
+<div class="row" id="appList">
 </div>
 <!--End Dashboard-->
 <div style="height: 40px;"></div>
@@ -23,62 +21,48 @@
     var naviID = "1";
 
     $(document).ready(function() {
-        var appsRep = [];
-        var appContainer;
+        $("#appList").hide();
         $(".preloader").show();
         $.ajax({
             url: "http://" + databaseIP + "/app",
             async: false,
             dataType: "json",
             success: function (apps_data) {
-                // Generar HTML per a totes les apps disponibles a la DB
+                // Generar HTML per a totes les apps disponibles a la DB i fer lappend
                 $.each (apps_data, function (key, app) {
-                    appContainer = '<div class="col-xs-12 col-sm-6 col-md-4 ow-server">' +
-                                        '<h4 class="page-header text-right"><i class="fa fa-linux"></i>' + app.name + '</h4>' +
-                                        '<div class="row ow-server-bottom">' +
-                                            '<div class="col-sm-4 text-center">' +
-                                                '<img src="http://' + repIP + '/repository/' + app.dir + '/' + app.icon + '" class="img-rounded app">' +
-                                            '</div>' +
-                                            '<div class="col-sm-8">' +
-                                                '<div class="row"><i class="fa fa-lock"></i> ' + app.cat + '</div>' +
-                                                '<div class="row"><div style="height: 10px;"></div></div>' +
-                                                '<div class="row">' +
-                                                    '<div class="col-md-6">' +
-                                                        '<div class="toggle-switch toggle-switch-primary">' +
-                                                            '<label>' +
-                                                                '<input type="checkbox" id="install" value="' + app.id + '"></input>' +
-                                                                '<div class="toggle-switch-inner" id="install"></div>' +
-                                                                '<div class="toggle-switch-switch">' +
-                                                                    '<i class="fa fa-check"></i>' +
-                                                                '</div>' +
-                                                            '</label>' +
-                                                        '</div>' +
-                                                    '</div>' +
-                                                    '<div class="col-md-6">' +
-                                                        '<div class="toggle-switch toggle-switch-primary">' +
-                                                            '<label>' +
-                                                                '<input type="checkbox" id="enable" value="' + app.id + '" disabled = "true"></input>' +
-                                                                '<div class="toggle-switch-inner" id="enable"></div>' +
-                                                                '<div class="toggle-switch-switch">' +
-                                                                    '<i class="fa fa-check"></i>' +
-                                                                '</div>' +
-                                                            '</label>' +
-                                                        '</div>' +
-                                                    '</div>' +
-                                                '</div>' +
-                                            '</div>' +
+                    $("#appList").append(
+                        '<div class="col-xs-12 col-sm-6 col-md-3" style="margin-bottom: 15px">' +
+                            '<div class="box ui-draggable ui-droppable">' +
+                                '<div class="box-header">' +
+                                    '<div class="box-name">' +
+                                        '<i class="fa fa-linux"></i>' +
+                                        '<span>' + app.name + '</span>' +
+                                    '</div>' +
+                                    '<div class="box-icons">' +
+                                        '<a class="collapse-link">' +
+                                            '<i class="fa fa-chevron-up"></i>' +
+                                        '</a>' +
+                                        '<a class="expand-link">' +
+                                            '<i class="fa fa-expand"></i>' +
+                                        '</a>' +
+                                    '</div>' +
+                                    '<div class="no-move"></div>' +
+                                '</div>' +
+                                '<div class="box-content col-sm-12">' +
+                                    '<div class="col-sm-4">' +
+                                        '<div class="row">' +
+                                            '<img src="http://' + repIP + '/repository/' + app.dir + '/' + app.icon + '" class="img-thumbnail app">' +
                                         '</div>' +
-                                    '</div>';
-                    appsRep.push(appContainer);
+                                    '</div>' +
+                                    '<div class="card col-sm-8">' +
+                                        '<button class="btn btn-default ladda-button" id="install" value="' + app.id + '" data-style="expand-left"><span class="ladda-label">Uninstalled</span></button>' +
+                                        '<div class="row"></div>' +
+                                        '<button class="btn btn-default ladda-button" id="enable" value="' + app.id + '" disabled="disabled" data-style="expand-left"><span class="ladda-label">Disabled</span></button>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>');
                 });
-
-                //Afegir tot el HTML de les apps disponibles i ocultar
-                $("<div>", {
-                    "id": "dashboard-servers",
-                    "class": "row",
-                    "style": "visibility: visible; position: relative;",
-                    html: appsRep.join("")
-                }).appendTo("#dashboard_tabs").hide();
 
                 //Settejar lestat corresponen a cada app del Navi
                 $.ajax({
@@ -88,21 +72,22 @@
                     success: function (state_data) {
                         //Aplicar lestat de les app installed
                         $.each (state_data['installed'], function (key, app) {
-                            $("#install[value='" + app.id + "']").prop('checked', true);
+                            $("#install[value='" + app.id + "']").removeClass("btn-default").addClass("btn-primary").children("span.ladda-label").text("Installed");
                             $("#enable[value='" + app.id + "']").prop('disabled', false);
                         });
                         //Aplicar lestat de les app enabled
                         $.each (state_data['enabled'], function (key, app) {
-                            $("#enable[value='" + app.id + "']").prop('disabled', false);
-                            $("#enable[value='" + app.id + "']").prop('checked', true);
+                            $("#enable[value='" + app.id + "']").prop('disabled', false).removeClass("btn-default").addClass("btn-success").children("span.ladda-label").text("Enabled");
                         });
                     },
                     error: function (e) {
                         alert('Database Connection State Error.');
                     }
                 });
-                $("#dashboard-servers").show();
+                $("#appList").show();
                 $(".preloader").hide();
+                // Add Drag-n-Drop feature & binding
+                WinMove();
             },
             error: function (e) {
                 alert('Database Connection App Error.');
@@ -111,41 +96,98 @@
 
 
 
-        $(document).off('click', 'input[type=checkbox]').on('click', 'input[type=checkbox]', function(){
-            if(this.id == "enable") {
-                if($(this).is(':checked')){
-                    appOperation("start", $(this).val());
-                    console.log((this.id) + " " + $(this).val() + " checked");
+        $(document).off('click', 'button.ladda-button').on('click', 'button.ladda-button', function() {
+            var buttonId = $(this).attr('id');
+            var buttonState = $(this).children("span.ladda-label").text();
+            if (buttonId == "enable") {
+                if (buttonState == "Enabled") {
+                    appOperation("stop", this);
                 }
                 else {
-                    appOperation("stop", $(this).val());
-                    console.log((this.id) + " " + $(this).val() + " unchecked");
+                    appOperation("start", this);
                 }
             }
-            else if(this.id == "install") {
-                if($(this).is(':checked')){
-                    appOperation("install", $(this).val());
-                    $("#enable[value='" + $(this).val() + "']").prop('disabled', false);
+            else {
+                if (buttonState == "Installed") {
+                    appOperation("remove", this);
                 }
                 else {
-                    appOperation("remove", $(this).val());
-                    $("#enable[value='" + $(this).val() + "']").prop('checked', false);
-                    $("#enable[value='" + $(this).val() + "']").prop('disabled', true);
+                    appOperation("install", this);
                 }
             }
         });
 
 
+        function appOperation(action, button) {
+            var appID = $(button).val();
+            var oldButton = $(button).clone();
+            var loading;
 
-        function appOperation(primitive, appID) {
             $.ajax({
-                url: "http://" + naviIP + "/" + primitive + "/" + appID,
+                url: "http://" + naviIP + "/" + action + "/" + appID,
                 dataType: "json",
+                beforeSend: function() {
+                    $(button).addClass("btn-info");
+                    switch (action) {
+                        case "stop":
+                            $("#install[value='" + appID + "']").prop('disabled', true);
+                            $(button).removeClass("btn-success").children("span.ladda-label").text("Stopping");
+                            break;
+                        case "start":
+                            $("#install[value='" + appID + "']").prop('disabled', true);
+                            $(button).removeClass("btn-default").children("span.ladda-label").text("Starting");
+                            break;
+                        case "install":
+                            $(button).removeClass("btn-default").children("span.ladda-label").text("Installing");
+                            break;
+                        case "remove":
+                            $("#enable[value='" + appID + "']").prop('disabled', true);
+                            $(button).removeClass("btn-primary").children("span.ladda-label").text("Removing");
+                            break;
+                    }
+                    loading = Ladda.create(button);
+                    loading.start();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $(button).removeClass("btn-info");
+                    $(button).find('span.ladda-spinner').remove();
+                    switch (action) {
+                        case "stop":
+                        case "start":
+                            $("#install[value='" + appID + "']").prop('disabled', false);
+                            break;
+                        case "remove":
+                            if (textStatus != "success") $("#enable[value='" + appID + "']").prop('disabled', false);
+                            break;
+                    }
+                    loading.stop();
+                },
                 success: function (json_data) {
                     var resp = jQuery.parseJSON(json_data);
-                    console.log("Success: " + resp.success);
+
+                    if (resp.success) {
+                        switch (action) {
+                            case "stop":
+                                $(button).addClass("btn-default").children("span.ladda-label").text("Disabled");
+                                break;
+                            case "start":
+                                $(button).addClass("btn-success").children("span.ladda-label").text("Enabled");
+                                break;
+                            case "install":
+                                $(button).addClass("btn-primary").children("span.ladda-label").text("Installed");
+                                $("#enable[value='" + appID + "']").prop('disabled', false);
+                                break;
+                            case "remove":
+                                $(button).addClass("btn-info").children("span.ladda-label").text("Uninstalled");
+                                $("#enable[value='" + appID + "']").prop('disabled', true).removeClass("btn-success").addClass("btn-default").children("span.ladda-label").text("Disabled");
+                                break;
+                        }
+                    }
                 },
                 error: function (e) {
+                    $(button).removeClass();
+                    $(button).addClass($(oldButton).attr("class"));
+                    $(button).children("span.ladda-label").text($(oldButton).children("span.ladda-label").text());
                     alert('Error App Operation.');
                 }
             });

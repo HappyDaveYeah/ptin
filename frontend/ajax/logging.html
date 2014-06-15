@@ -104,6 +104,9 @@
                     }
                     $("#all").prepend(entry);
                 });
+            },
+            error: function (e) {
+                alert('Database Connection Logging Error.');
             }
         });
 

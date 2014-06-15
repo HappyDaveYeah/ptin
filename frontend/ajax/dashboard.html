@@ -31,12 +31,13 @@
                 // Generar HTML per a totes les apps disponibles a la DB i fer lappend
                 $.each (apps_data, function (key, app) {
                     $("#appList").append(
-                        '<div class="col-xs-12 col-sm-6 col-md-3" style="margin-bottom: 15px">' +
+                        '<div class="col-xs-12 col-sm-6 col-md-3 boxy" style="margin-bottom: 15px">' +
                             '<div class="box ui-draggable ui-droppable">' +
                                 '<div class="box-header">' +
                                     '<div class="box-name">' +
                                         '<i class="fa fa-linux"></i>' +
                                         '<span>' + app.name + '</span>' +
+                                        '<p hidden>' + app.cat + '</p>' +
                                     '</div>' +
                                     '<div class="box-icons">' +
                                         '<a class="collapse-link">' +
@@ -192,6 +193,15 @@
                 }
             });
         }
+
+        // Filtre per al input search
+        $("#input-search").on("keyup", function() {
+            var rex = new RegExp($(this).val(), 'i');
+            $("#appList").find(".boxy").hide();
+            $("#appList").find(".boxy").filter(function() {
+                return rex.test($(this).text());
+            }).show();
+        });
 
     });
 

@@ -108,6 +108,17 @@
         });
 
 
+        // Filtre per al input search
+        $("#input-search").on("keyup", function() {
+            var rex = new RegExp($(this).val(), 'i');
+            console.log(rex);
+            $(".qa-message-list").find(".message-item").hide();
+            $(".qa-message-list").find(".message-item").filter(function() {
+                return rex.test($(this).text());
+            }).show();
+        });
+
+
     var timestamp = $.now();
 /*
     (function poll(){

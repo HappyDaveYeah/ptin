@@ -22,24 +22,21 @@
             </li>
             <li class=""><a href="#warning-pills" data-toggle="tab"><i class="fa fa-warning fa-fw"></i> Warning</a>
             </li>
-            <li class=""><a href="#error-pills" data-toggle="tab"><i class="fa fa-bolt fa-fw"></i> Error</a>
-            </li>
-            <li class=""><a href="#critical-pills" data-toggle="tab"><i class="fa fa-bomb fa-fw"></i> Critical</a>
+            <li class=""><a href="#critical-pills" data-toggle="tab"><i class="fa fa-times-circle-o fa-fw"></i> Critical</a>
             </li>
         </ul>
         <div class="tab-content">
-            <div id="all-pills" class="tab-pane fade active in"><div style="height: 15px;"></div><div id="all" class="list-group"></div></div>
-            <div id="info-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="info" class="list-group"></div></div>
-            <div id="warning-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="warning" class="list-group"></div></div>
-            <div id="error-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="error" class="list-group"></div></div>
-            <div id="critical-pills" class="tab-pane fade"><div style="height: 15px;"></div><div id="critical" class="list-group"></div></div>
+            <div id="all-pills" class="tab-pane fade active in"><div id="all" class="qa-message-list"></div></div>
+            <div id="info-pills" class="tab-pane fade"><div id="info" class="qa-message-list"></div></div>
+            <div id="warning-pills" class="tab-pane fade"><div id="warning" class="qa-message-list"></div></div>
+            <div id="critical-pills" class="tab-pane fade"><div id="critical" class="qa-message-list"></div></div>
         </div>
-        <div style="height: 15px;"></div>
         <!-- /.list-group -->
         <button type="button" class="btn btn-primary btn-label-left"><span><i class="fa fa-history"></i></span>Clear</button>
         <button type="button" class="btn btn-primary btn-label-left"><span><i class="fa fa-cloud-download"></i></span>Download</button>
     </div>
     <!-- /.panel-body -->
+
 </div>
 <!-- /.panel -->
 
@@ -61,10 +58,30 @@
                 $.each(log_data, function(index, log){
                     var localDateTime = (new Date((log['timestamp'] * 1000)).toLocaleString());
 
-                    var entry = '<a href="#" class="list-group-item">' + log['message'] +
+                    var entry =
+                        '<div class="message-item">' +
+                            '<div class="message-inner">' +
+                                '<div class="message-head clearfix">' +
+                                    '<div class="avatar pull-left"><img class="logging" src="./img/' + log['levelno'] + '.png"></div>' +
+                                    '<div class="user-detail">' +
+                                        '<h5 class="handle">' + log['message'] + '</h5>' +
+                                        '<div class="post-meta">' +
+                                            '<div class="asker-meta">' +
+                                            '<span class="qa-message-what"></span>' +
+                                            '<span class="text-muted">' +
+                                                '<em>' + localDateTime + '</em>' +
+                                            '</span>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+
+                    /*var entry = '<a href="#" class="list-group-item">' + log['message'] +
                         '<span class="pull-right text-muted small">' +
                         '<em>' + localDateTime + '</em></span></a>';
-
+                    */
                     // Afegir entrada de log en el tab corresponent al loglevel
                     switch (log['levelno']) {
                         /*case 1:
@@ -77,9 +94,10 @@
                         case 30:
                             $("#warning").prepend(entry);
                             break;
-                        case 40:
+                        /*case 40:
                             $("#error").prepend(entry);
                             break;
+                        */
                         case 50:
                             $("#critical").prepend(entry);
                             break;

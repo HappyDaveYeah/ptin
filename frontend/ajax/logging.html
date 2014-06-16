@@ -27,13 +27,12 @@
         </ul>
         <div class="tab-content">
             <div id="all-pills" class="tab-pane fade active in"><div id="all" class="qa-message-list"></div></div>
-            <div id="info-pills" class="tab-pane fade"><div id="info" class="qa-message-list"></div></div>
-            <div id="warning-pills" class="tab-pane fade"><div id="warning" class="qa-message-list"></div></div>
-            <div id="critical-pills" class="tab-pane fade"><div id="critical" class="qa-message-list"></div></div>
+            <div id="info-pills" class="tab-pane fade"><div id="20" class="qa-message-list"></div></div>
+            <div id="warning-pills" class="tab-pane fade"><div id="30" class="qa-message-list"></div></div>
+            <div id="critical-pills" class="tab-pane fade"><div id="50" class="qa-message-list"></div></div>
         </div>
         <!-- /.list-group -->
-        <button type="button" class="btn btn-primary btn-label-left"><span><i class="fa fa-history"></i></span>Clear</button>
-        <button type="button" class="btn btn-primary btn-label-left"><span><i class="fa fa-cloud-download"></i></span>Download</button>
+        <button type="button" id="clear" class="btn btn-primary btn-label-left"><span><i class="fa fa-history"></i></span>Clear</button>
     </div>
     <!-- /.panel-body -->
 
@@ -45,9 +44,11 @@
 <div style="height: 40px;"></div>
 
 <script type="text/javascript">
-    //IP de la database
+    // IP de la database
     var databaseIP = "37.187.9.5:13370";
     var naviID = "1";
+    // Setting up loglevels
+    var loglevels = {10: "debug", 20: "info", 30: "warning", 40: "error", 50: "critical"};
 
     $(document).ready(function() {
         $.ajax({
@@ -70,6 +71,7 @@
                                             '<span class="qa-message-what"></span>' +
                                             '<span class="text-muted">' +
                                                 '<em>' + localDateTime + '</em>' +
+                                                '<p hidden>' + log['levelno'] + '</p>' +
                                             '</span>' +
                                         '</div>' +
                                     '</div>' +
@@ -78,31 +80,9 @@
                             '</div>' +
                         '</div>';
 
-                    /*var entry = '<a href="#" class="list-group-item">' + log['message'] +
-                        '<span class="pull-right text-muted small">' +
-                        '<em>' + localDateTime + '</em></span></a>';
-                    */
                     // Afegir entrada de log en el tab corresponent al loglevel
-                    switch (log['levelno']) {
-                        /*case 1:
-                            $("#debug").prepend(entry);
-                            break;
-                        */
-                        case 20:
-                            $("#info").prepend(entry);
-                            break;
-                        case 30:
-                            $("#warning").prepend(entry);
-                            break;
-                        /*case 40:
-                            $("#error").prepend(entry);
-                            break;
-                        */
-                        case 50:
-                            $("#critical").prepend(entry);
-                            break;
-                    }
-                    $("#all").prepend(entry);
+                    $("div#" + log['levelno']).prepend(entry);
+                    $("div#all").prepend(entry);
                 });
             },
             error: function (e) {
@@ -121,24 +101,63 @@
             }).show();
         });
 
+        // Gestio bottons
+        $(document).off('click', 'button.btn-primary').on('click', 'button.btn-primary', function() {
+            var buttonId = $(this).attr('id');
+            var loglevel = $("div.active.in").children('div.qa-message-list').attr('id');
 
-    var timestamp = $.now();
-/*
-    (function poll(){
-            setTimeout(function() {
-                if (location.hash.replace(/^#/, '') == 'ajax/logging.html'){
-                    $.ajax({
-                        url: "http://localhost:8080/getLog/" + timestamp,
-                        dataType: "json",
-                        success: function(data){
-                            var resp = jQuery.parseJSON(data);
-                            console.log("Success: " + resp.success);
-                            //console.log("Payload: " + resp.payload['logs'][0]['timestamp']);
-                        },
-                        complete: poll
-                    });
-               }
-            }, 5000);
-    })();*/
-});
+            if (buttonId == "clear") {
+                $.ajax({
+                    url: "http://" + databaseIP + "/log/clearlogs?id=" + naviID + "&loglevel=" + loglevel,
+                    dataType: "json",
+                    success: function (clear_response) {
+                        if (loglevel == "all") {
+                            $("div.message-item").remove();
+                        }
+                        else {
+                            $("div.message-item:has(p:contains(" + loglevel + "))").remove();
+                        }
+                    },
+                    error: function (error) {
+                        alert('Database Connection Clean Logs Error.');
+                    }
+                });
+            }
+        });
+
+        /*
+        // Download Button
+        var logs = [];
+        $("div.message-item").each(function(){
+            logs.push({
+                message: $(this).find(".handle").text(),
+                timestamp: $(this).find("em").text(),
+                loglevel: $(this).find("p").text()
+            });
+        });
+        var json = JSON.stringify(logs);
+        var blob = new Blob([json], {type: "application/json"});
+        var url  = URL.createObjectURL(blob);
+
+        $("a#download").attr("href", url).attr("download", "backup.json");
+
+        var timestamp = $.now();
+
+        (function poll(){
+                setTimeout(function() {
+                    if (location.hash.replace(/^#/, '') == 'ajax/logging.html'){
+                        $.ajax({
+                            url: "http://localhost:8080/getLog/" + timestamp,
+                            dataType: "json",
+                            success: function(data){
+                                var resp = jQuery.parseJSON(data);
+                                console.log("Success: " + resp.success);
+                                //console.log("Payload: " + resp.payload['logs'][0]['timestamp']);
+                            },
+                            complete: poll
+                        });
+                   }
+                }, 5000);
+        })();*/
+    });
 </script>

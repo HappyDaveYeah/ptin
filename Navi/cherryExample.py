@@ -33,10 +33,18 @@ def searchLocalById(id):
     i = 0
     while (i < len(appsLocal)) and (not find):
         if appsLocal[i]["id"] == id: find = True
-        i += 1
+        else: i += 1
     if find: return i
 
 class Navi(object):
+
+    """ Load Local state """
+    @staticmethod
+    def loadState():
+        json_data = open('data.txt')
+        appsLocal.extend(json.load(json_data))
+	print appsLocal
+
     """ Descarrega el repository dapps """
     @staticmethod
     def getApps():
@@ -52,19 +60,21 @@ class Navi(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def install(self, id=None):
-        app = self.getAppFromRep(id)
+        app = self.getAppFromDB(id)
         # Descarrega de lapp
         call('mkdir apps/'+id, shell=True)
         urllib.urlretrieve('http://' + repIP + '/repository/' + app['dir'] + '/' + app['file_name'], 'apps/' + id + '/' + app['file_name'])
         #install + creacio imatge de la app (docker)
         file = open('apps/'+id+'/Dockerfile', 'w')
         file.write('FROM pybuntu\n'
-                   'ADD ' + app['file_name'] + ' /apps/'+app['file_name'] + '\nRUN echo "Image created"')
+                   'ADD ' + app['file_name'] + ' /apps/'+app['file_name'] + '\nEXPOSE 808'+id+'\nRUN echo "Image created"')
         file.close()
-        call('docker build -t ' + id + ' /home/navi/Desktop/apps/'+id, shell=True)
+        call('docker build -t ' + id + ' ./apps/'+id, shell=True)
         #consistenciaLocal
         ap = {"id":id, "run":0}
         appsLocal.append(ap)
+        with open('data.txt', 'w') as outfile:
+            json.dump(appsLocal, outfile)
         # Logging
         message = ""+ app['name'] +" - Application Installed"
         extra = {'idApp': id }
@@ -85,6 +95,8 @@ class Navi(object):
         #consistenciaLocal
         t = searchLocalById(id)
         appsLocal.pop(t)
+        with open('data.txt', 'w') as outfile:
+            json.dump(appsLocal, outfile)
         # Logging
         message = ""+ app['name'] +" - Application Removed"
         extra = {'idApp': id }
@@ -97,11 +109,13 @@ class Navi(object):
     def start(self, id=None):
         app = self.getAppFromDB(id)
         #run del contenidor
-        #ESTE ES EL BUENO call('docker run -d --name ' + id + ' ' + id + 'python ' + app['file_name'], shell=True)
-        call('docker run -d --name ' + id + ' ' + id + 'echo "hello world" >> /apps/test', shell=True)
+        call('docker run -p 808'+id+':808'+id+' -d --name ' + id + ' ' + id + ' python /apps/'+app['file_name'], shell=True)
+        #call('docker run -p 808'+id+':808'+id+' -d --name ' + id + ' ' + id + ' echo "hello world" >> testecho', shell=True)
+	print "he fet un run"
         #consistenciaLocal
-        t = searchLocalById(id)
-        appsLocal[t]["run"] = 1
+        appsLocal[searchLocalById(id)]["run"] = 1
+        with open('data.txt', 'w') as outfile:
+            json.dump(appsLocal, outfile)
         # Logging
         message = ""+ app['name'] +" - Application Started"
         extra = {'idApp': id }
@@ -117,8 +131,9 @@ class Navi(object):
         call('docker kill '+ id, shell=True)
         call('docker rm ' + id, shell=True)
         #consistenciaLocal
-        t = searchLocalById(id)
-        appsLocal[t]["run"] = 0
+        appsLocal[searchLocalById(id)]["run"] = 0
+        with open('data.txt', 'w') as outfile:
+            json.dump(appsLocal, outfile)
         # Logging
         message = ""+ app['name'] +" - Application Stopped"
         extra = {'idApp': id }
@@ -142,7 +157,9 @@ class Navi(object):
 
 # Obtneir tots la BBDD de les apps en el repository
 Navi.getApps()
-print appsDB
+Navi.loadState()
+
+
 
 # Start CherryPy
 cherrypy.config.update({'server.socket_host': '0.0.0.0', 'tools.CORS.on': True})

@@ -1,13 +1,20 @@
 __author__ = 'dmicomrt'
+import json
+from pprint import pprint
+
 
 foo = [{"id":1, "od":2},{"id":3, "od":4}]
-print foo[0]['id']
 fo = {"id":5, "od":6}
 foo.append(fo)
-print foo[2]["od"]
-fo = {"id":1, "od":2}
-#foo.remove(fo)
-foo.pop(0)
-print foo[0]['id']
-foo[0]["run"] = 5
-print foo[0]["run"]
+foo[0]["id"] = 5
+
+
+with open('data.txt', 'w') as outfile:
+  json.dump(foo, outfile)
+
+
+json_data=open('data.txt')
+data = json.load(json_data)
+
+print data
+print data[0]["id"]

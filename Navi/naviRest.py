@@ -52,8 +52,10 @@ class Navi(object):
         appsDB.extend(r.json())
 
     """ Cerca i retorna lapp en el repository obtingut """
-    def getAppFromDB(self, id=None):
+    @staticmethod
+    def getAppFromDB(id=None):
         return next((app for app in appsDB if app['id'] == int(id)), None)
+
     @staticmethod
     def restore():
         for i in appsLocal:

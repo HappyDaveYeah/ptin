@@ -55,10 +55,10 @@ class Navi(object):
     def getAppFromDB(self, id=None):
         return next((app for app in appsDB if app['id'] == int(id)), None)
     @staticmethod
-    def restore(self):
+    def restore():
         for i in appsLocal:
             if i["run"] == 1:
-                app = self.getAppFromDB(i["id"])
+                app = Navi.getAppFromDB(i["id"])
                 call('docker run -p 808'+i["id"]+':808'+i["id"]+' -d --name ' + i["id"] + ' ' + i["id"] + ' python /apps/'+app['file_name'], shell=True)
 
 

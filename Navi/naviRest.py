@@ -54,6 +54,12 @@ class Navi(object):
     """ Cerca i retorna lapp en el repository obtingut """
     def getAppFromDB(self, id=None):
         return next((app for app in appsDB if app['id'] == int(id)), None)
+    @staticmethod
+    def restore(self):
+        for i in appsLocal:
+            if i["run"] == 1:
+                app = self.getAppFromDB(i["id"])
+                call('docker run -p 808'+i["id"]+':808'+i["id"]+' -d --name ' + i["id"] + ' ' + i["id"] + ' python /apps/'+app['file_name'], shell=True)
 
 
     #--------INSTALL--------
@@ -153,14 +159,6 @@ class Navi(object):
         #     print line
         #     out.append(line)
         # return json.dumps(out)
-
-    @staticmethod
-    def restore():
-        for i in appsLocal:
-            if i["run"] == 1:
-                app = Navi.getAppFromDB(i["id"])
-                call('docker run -p 808'+i["id"]+':808'+i["id"]+' -d --name ' + i["id"] + ' ' + i["id"] + ' python /apps/'+app['file_name'], shell=True)
-
 
 
 # Obtneir tots la BBDD de les apps en el repository

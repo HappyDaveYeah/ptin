@@ -158,7 +158,10 @@ class Navi(object):
 # Obtneir tots la BBDD de les apps en el repository
 Navi.getApps()
 Navi.loadState()
-
+for i in appsLocal:
+    if i["run"] == 1:
+        app = Navi.getAppFromDB(i["id"])
+        call('docker run -p 808'+i["id"]+':808'+i["id"]+' -d --name ' + i["id"] + ' ' + i["id"] + ' python /apps/'+app['file_name'], shell=True)
 
 
 # Start CherryPy

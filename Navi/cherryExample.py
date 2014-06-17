@@ -41,7 +41,7 @@ class Navi(object):
     """ Load Local state """
     @staticmethod
     def loadState():
-        json_data = open('data.txt')
+        json_data = open('data.json')
         appsLocal.extend(json.load(json_data))
 	print appsLocal
 
@@ -73,7 +73,7 @@ class Navi(object):
         #consistenciaLocal
         ap = {"id":id, "run":0}
         appsLocal.append(ap)
-        with open('data.txt', 'w') as outfile:
+        with open('data.json', 'w') as outfile:
             json.dump(appsLocal, outfile)
         # Logging
         message = ""+ app['name'] +" - Application Installed"
@@ -95,7 +95,7 @@ class Navi(object):
         #consistenciaLocal
         t = searchLocalById(id)
         appsLocal.pop(t)
-        with open('data.txt', 'w') as outfile:
+        with open('data.json', 'w') as outfile:
             json.dump(appsLocal, outfile)
         # Logging
         message = ""+ app['name'] +" - Application Removed"
@@ -114,7 +114,7 @@ class Navi(object):
 	print "he fet un run"
         #consistenciaLocal
         appsLocal[searchLocalById(id)]["run"] = 1
-        with open('data.txt', 'w') as outfile:
+        with open('data.json', 'w') as outfile:
             json.dump(appsLocal, outfile)
         # Logging
         message = ""+ app['name'] +" - Application Started"
@@ -132,7 +132,7 @@ class Navi(object):
         call('docker rm ' + id, shell=True)
         #consistenciaLocal
         appsLocal[searchLocalById(id)]["run"] = 0
-        with open('data.txt', 'w') as outfile:
+        with open('data.json', 'w') as outfile:
             json.dump(appsLocal, outfile)
         # Logging
         message = ""+ app['name'] +" - Application Stopped"

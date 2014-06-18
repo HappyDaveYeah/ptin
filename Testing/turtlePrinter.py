@@ -15,24 +15,21 @@ def makeSpiral(size):
         makeSquare(size)
         left(20)
 
-HOST = ''                 # Symbolic name meaning the local host
-PORT = 8088              # Arbitrary non-privileged port
+HOST = '192.168.60.18'               
+PORT = 8088
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST, PORT))
-s.listen(10)
+s.connect((HOST, PORT))
 
 coloring = -1
 
 for i in range(10):
-    conn, addr = s.accept()
-    print 'Connected by', addr
-    data = conn.recv(1024)
+
+    data = s.recv(1024)
+    if not data: break
+    print 'rebo alguna cosa'
     if coloring == 1: color("red")
     else: color("green")
-    makeSpiral(75)
+    makeSpiral(200)
     coloring *= -1
-    conn.send(data)
-    conn.close()
 
-exitonclick()
-
+s.close()
